@@ -1,39 +1,8 @@
 CFLAGS = -g -pthread -std=c99 -Wall
 GITFLAGS = -q  --no-verify --allow-empty
-all: simple stress
+all:
 	-@git add . --ignore-errors
 	-@(echo "> compile" && uname -a) | git commit -F - $(GITFLAGS)
-simple: client/app_simple_client.o server/app_simple_server.o client/stcp_client.o server/stcp_server.o common/seg.o
-	gcc $(CFLAGS) server/app_simple_server.o common/seg.o server/stcp_server.o -o server/simple_server
-	gcc $(CFLAGS) client/app_simple_client.o common/seg.o client/stcp_client.o -o client/simple_client
-
-stress: client/app_stress_client.o server/app_stress_server.o client/stcp_client.o server/stcp_server.o common/seg.o
-	gcc $(CFLAGS) server/app_stress_server.o common/seg.o server/stcp_server.o -o server/stress_server
-	gcc $(CFLAGS) client/app_stress_client.o common/seg.o client/stcp_client.o -o client/stress_client
-
-client/app_simple_client.o: client/app_simple_client.c 
-	gcc $(CFLAGS) -c client/app_simple_client.c -o client/app_simple_client.o 
-server/app_simple_server.o: server/app_simple_server.c 
-	gcc $(CFLAGS) -c server/app_simple_server.c -o server/app_simple_server.o
-
-client/app_stress_client.o: client/app_stress_client.c 
-	gcc $(CFLAGS) -c client/app_stress_client.c -o client/app_stress_client.o 
-server/app_stress_server.o: server/app_stress_server.c 
-	gcc $(CFLAGS) -c server/app_stress_server.c -o server/app_stress_server.o
-
-common/seg.o: common/seg.c common/seg.h
-	gcc -g -c common/seg.c -o common/seg.o
-client/stcp_client.o: client/stcp_client.c client/stcp_client.h 
-	gcc $(CFLAGS) -c client/stcp_client.c -o client/stcp_client.o
-server/stcp_server.o: server/stcp_server.c server/stcp_server.h
-	gcc $(CFLAGS) -c server/stcp_server.c -o server/stcp_server.o
-
 clean:
-	rm -rf client/*.o
-	rm -rf server/*.o
-	rm -rf common/*.o
-	rm -rf client/simple_client
-	rm -rf server/simple_server
-	rm -rf client/stress_client
-	rm -rf server/stress_server
+	rm -rf *.o
 

@@ -5,4 +5,5 @@ all:
 	-@(echo "> compile" && uname -a) | git commit -F - $(GITFLAGS)
 clean:
 	rm -rf *.o
+	rm -rf *~
 
