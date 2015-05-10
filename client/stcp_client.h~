@@ -40,10 +40,6 @@ typedef struct client_tcb {
 	segBuf_t* sendBufunSent;        //发送缓冲区中的第一个未发送段
 	segBuf_t* sendBufTail;          //发送缓冲区尾
 	unsigned int unAck_segNum;      //已发送但未收到确认段的数量
-	pthread_mutex_t* recvMutex;
-	char recvBuf[RECEIVE_BUF_SIZE];
-	int recvBufLen;
-        pthread_t* timer;
 } client_tcb_t;
 
 //

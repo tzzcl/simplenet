@@ -375,7 +375,7 @@ void* sendBuf_timer(void* clienttcb)
       //fprintf(stderr,"sendBuf_timer: sending, seqNum: %d\n", segbuf->seg.header.seq_num);
       //if (sip_sendseg(connection,&segbuf->seg)==-1) {
       if (sip_sendseg(sip_conn,p->server_nodeID,&segbuf->seg)==-1) {
-        fprintf(stderr,"%s: send failed\n",__FUNCTION__);
+        fprintf(stderr,"sip_sendseg: send failed\n");
       }
       if (c==GBN_WINDOW) break;
     }

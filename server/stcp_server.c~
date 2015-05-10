@@ -111,7 +111,7 @@ int stcp_server_recv(int sockfd, void* buf, unsigned int length)
 		printf("%d %d %d %d\n",sockfd,buflen,nowlen,recv_cp);
 		memcpy(buf,server_table[sockfd]->recvBuf,recv_cp);
 		recv_length+=recv_cp;
-		buf+=recv_cp;
+		buf+=(void*)recv_cp;
 		server_table[sockfd]->usedBufLen-=recv_cp;
 		memmove(server_table[sockfd]->recvBuf,server_table[sockfd]->recvBuf+recv_cp,server_table[sockfd]->usedBufLen);
 		pthread_mutex_unlock(server_table[sockfd]->bufMutex);

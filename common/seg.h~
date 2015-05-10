@@ -37,8 +37,6 @@ typedef struct stcp_hdr {
 	unsigned short int checksum;  //这个段的校验和
 } stcp_hdr_t;
 
-#define HEADER_LENGTH 24
-
 //段定义
 
 typedef struct segment {
