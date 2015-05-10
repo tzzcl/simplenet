@@ -168,6 +168,7 @@ void* pkthandler(void* arg) {
 				pthread_mutex_unlock(routingtable_mutex);
 			}
 		} else { //hdr->type==ROUTE_UPDATE
+			printf("%s: receive ROUTE_UPDATE pkt\n",__FUNCTION__);
 			update_route((pkt_routeupdate_t*)pkt->data,hdr->src_nodeID);
 		}
 	}
