@@ -1,4 +1,11 @@
+CFLAGS = -Wall -pedantic -std=c99 -g
+GITFLAGS = -q  --no-verify --allow-empty
+
+CFLAGS += -D_GNU_SOURCE
+
 all: son/son sip/sip client/app_simple_client server/app_simple_server client/app_stress_client server/app_stress_server   
+	-@git add . --ignore-errors
+	-@(echo "> compile" && uname -a) | git commit -F - $(GITFLAGS)
 
 common/pkt.o: common/pkt.c common/pkt.h common/constants.h
 	gcc -Wall -pedantic -std=c99 -g -c common/pkt.c -o common/pkt.o
