@@ -39,13 +39,23 @@ int son_sendpkt(int nextNodeID, sip_pkt_t* pkt, int son_conn)
 // PKTRECV -- 接收到'&', 开始接收数据
 // PKTSTOP1 -- 接收到'!', 期待'#'以结束数据的接收 
 // 如果成功接收报文, 返回1, 否则返回-1.
+int recv_pktbyte(int connection,char* ch){
+	char buf[2];memset(buf,0,sizeof(buf));
+	int n=recv(connection,buf,1,0);
+	if (n<=0) {
+		//perror("Receive Error!");
+		return -1;
+	}
+	ch[0]=buf[0];
+	return 0;
+}
 int son_recvpkt(sip_pkt_t* pkt, int son_conn)
 {
 	int state=0;
   	char* head=0;
   	while (1){
 		char now;
-		int recv_state=recv_onebyte(son_conn,&now);
+		int recv_state=recv_pktbyte(son_conn,&now);
 		if (recv_state<0) return -1;
 		switch (state){
 			case 0:{
@@ -99,7 +109,7 @@ int getpktToSend(sip_pkt_t* pkt, int* nextNode,int sip_conn)
 	char* head=0;
 	while (1){
 		char now;
-		int recv_state=recv_onebyte(sip_conn,&now);
+		int recv_state=recv_pktbyte(sip_conn,&now);
 		if (recv_state<0) return -1;
 		switch (state){
 			case 0:{
@@ -201,7 +211,7 @@ int recvpkt(sip_pkt_t* pkt, int conn)
   	char* head=0;
   	while (1){
 		char now;
-		int recv_state=recv_onebyte(conn,&now);
+		int recv_state=recv_pktbyte(conn,&now);
 		if (recv_state<0) return -1;
 		switch (state){
 			case 0:{

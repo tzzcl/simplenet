@@ -7,6 +7,8 @@
 #define	ROUTE_UPDATE 1
 #define SIP 2	
 
+#define PKT_HEADER_LENGTH 12
+
 //SIP报文格式定义
 typedef struct sipheader {
   int src_nodeID;		          //源节点ID
