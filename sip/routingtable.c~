@@ -98,7 +98,7 @@ void routingtable_print(routingtable_t* routingtable)
   for (int i=0;i<MRS;i++) {
 	printf("SLOT %d:\t",i);
 	for (routingtable_entry_t *p=routingtable->hash[i];p!=NULL;p=p->next) {
-		printf("[DEST:%d,NEXT:%d]->",p->destNodeID,p->nextNodeID);
+		printf("[DEST:%d,NEXT:%d]->",p->dextNodeID,p->nextNodeID);
 	}
 	printf("NULL\n");
   }
