@@ -75,7 +75,7 @@ int sip_recvseg(int sip_conn, int* src_nodeID, seg_t* segPtr)
 	}
 	if (state==4){
 		if (head-(char*)seg_arg!=sizeof(sendseg_arg_t)){
-			printf("%s: bad recv length %d\n",head-seg_arg);
+			printf("%s: bad recv length %d\n",head-(char*)seg_arg);
 			goto bad;
 		}
 		*src_nodeID = seg_arg->nodeID;
@@ -137,7 +137,7 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 	}
 	if (state==4){
 		if (head-(char*)seg_arg!=sizeof(sendseg_arg_t)){
-			printf("%s: bad recv length %d\n",__FUNCTION__,head-seg_arg);
+			printf("%s: bad recv length %d\n",__FUNCTION__,head-(char*)seg_arg);
 			goto bad;
 		}
 		*dest_nodeID = seg_arg->nodeID;
@@ -166,7 +166,22 @@ bad:
 //如果sendseg_arg_t被成功发送就返回1, 否则返回-1.
 int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 {
-  return 0;
+	sendseg_arg_t *seg_arg = malloc(sizeof(sendseg_arg_t));
+	if (send(stcp_conn,"!&",2,0)<=0) goto bad;
+	seg_arg->nodeID = src_nodeID;
+	memcpy(&seg_arg->seg,segPtr,sizeof(seg_t));
+	stcp_hdr_t *header=&(seg_arg->seg.header);
+	/*header->checksum=0;
+	header->checksum=checksum(&seg_arg->seg);*/
+	if (send(sip_conn,seg_arg,sizeof(sendseg_arg_t),0)>=0) goto bad;
+	if (send(sip_conn,"!#",2,0)<=0) goto bad;
+        printf("%s: succeeded\n",__FUNCTION__);
+	free(seg_arg);
+	return 1;
+bad:
+        printf("%s: failed\n",__FUNCTION__);
+	free(seg_arg);
+	return -1;
 }
 
 // 一个段有PKT_LOST_RATE/2的可能性丢失, 或PKT_LOST_RATE/2的可能性有着错误的校验和.
