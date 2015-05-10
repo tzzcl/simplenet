@@ -74,6 +74,7 @@ int topology_getNbrNum()
         }
     }
     //printf("%d node has %d neighbors\n",topology_getMyNodeID(),total);
+    fclose(file);
     return total;
 }
 
@@ -134,6 +135,7 @@ int* topology_getNbrArray()
             }
         }
     }
+    fclose(file);
     return new_table;
  	//return 0;
 }
@@ -162,5 +164,6 @@ unsigned int topology_getCost(int fromNodeID, int toNodeID)
          if (firstid==toNodeID&&secondid==fromNodeID)
           return cost; 
     }
+    fclose(file);
     return INFINITE_COST;
 }

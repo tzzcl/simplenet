@@ -153,9 +153,9 @@ unsigned int topology_getCost(int fromNodeID, int toNodeID)
         int firstid,secondid;
         for (int i=0;i<4;i++){
           if (strcmp(hostname_table[i],first)==0)
-            firstid=i;
+            firstid=node_table[i];
           if (strcmp(hostname_table[i],second)==0)
-            secondid=i;
+            secondid=node_table[i];
         }
          if (firstid==fromNodeID&&secondid==toNodeID)
           return cost; 
