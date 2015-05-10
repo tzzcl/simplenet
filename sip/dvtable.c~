@@ -74,7 +74,6 @@ int dvtable_setcost(dv_t* dvtable,int fromNodeID,int toNodeID, unsigned int cost
 		dv_entry_t *dve = dvtable->dvEntry;
 		for (int j=0;j<N;j++) {
 			if (dve->nodeID==toNodeID) {
-				cnt++;
 				dve->cost=cost;
 				return 1;
 			}
