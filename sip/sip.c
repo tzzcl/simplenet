@@ -93,6 +93,7 @@ void build_routeupdate_pkt(sip_pkt_t* send_seg) {
 	dv_entry_t *p=dvt->dvEntry;
 	printf("%s: dump test\n",__FUNCTION__);
 	for (int i=0;i<N;i++) {
+		printf("p: %x,i: %d\n",p,i);
 		pkt_ru->entry[i].nodeID = p->nodeID;
 		pkt_ru->entry[i].cost = p->cost;
 		p++;
