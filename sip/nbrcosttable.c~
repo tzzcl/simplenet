@@ -30,7 +30,7 @@ nbr_cost_entry_t* nbrcosttable_create()
 	nct->cost=topology_getCost(m,a[i]);
 	nct++;
   }
-  return nct-n;
+  return nct;
 }
 
 //这个函数删除邻居代价表.
