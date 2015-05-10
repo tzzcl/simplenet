@@ -127,6 +127,14 @@ void* pkthandler(void* arg) {
 		if (hdr->type==SIP) {
 			if (hdr->dest_nodeID==topology_getMyNodeID()) {
 				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)pkt->data)->seg);
+			} else {
+				pthread_mutex_lock(routingtable_mutex);
+				for (routingtable_entry_t *p=routingtable->hash[makehash(hdr->dest_nodeID)];p!=NULL;p=p->next) {
+					if (hdr->dest_nodeID==p->destNodeID) { son_sendpkt(p->nextNodeID,pkt,son_conn);
+					break;
+					}
+				}
+				pthread_mutex_unlock(routingtable_mutex);
 			}
 		} else {
 			

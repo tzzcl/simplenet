@@ -78,7 +78,7 @@ void build_routeupdate_pkt(sip_pkt_t* send_seg) {
 	header->dest_nodeID = BROADCAST_NODEID;
 	header->type = ROUTE_UPDATE;
 	memset(send_seg->data,0,MAX_PKT_LEN);
-	pkt_routeupdate_t *pkt_ru = (pkt_routeupdate_t*)sendseg->data;
+	pkt_routeupdate_t *pkt_ru = (pkt_routeupdate_t*)send_seg->data;
 	int n=topology_getNbrNum(),N=topology_getNodeNum();
 	pkt_ru->entryNum = N;
 	header->length = sizeof(pkt_routeupdate_t)*N+sizeof(int);
@@ -127,6 +127,14 @@ void* pkthandler(void* arg) {
 		if (hdr->type==SIP) {
 			if (hdr->dest_nodeID==topology_getMyNodeID()) {
 				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)pkt->data)->seg);
+			} else {
+				pthread_mutex_lock(routingtable_mutex);
+				for (routingtable_entry_t *p=routingtable->hash[makehash(hdr->dest_nodeID)];p!=NULL;p=p->next) {
+					if (hdr->dest_nodeID==p->destNodeID) { son_sendpkt(nextNodeID,pkt,son_conn);
+					break;
+					}
+				}
+				pthread_mutex_unlock(routingtable_mutex);
 			}
 		} else {
 			
