@@ -73,23 +73,45 @@ int connectToSON() {
 
 //这个线程每隔ROUTEUPDATE_INTERVAL时间发送路由更新报文.路由更新报文包含这个节点
 //的距离矢量.广播是通过设置SIP报文头中的dest_nodeID为BROADCAST_NODEID,并通过son_sendpkt()发送报文来完成的.
+void build_routeupdate_pkt(sip_pkt_t* send_seg) {
+	sip_hdr_t *header = &send_seg->header;
+	header->dest_nodeID = BROADCAST_NODEID;
+	header->type = ROUTE_UPDATE;
+	memset(send_seg->data,0,MAX_PKT_LEN);
+	pkt_routeupdate_t *pkt_ru = (pkt_routeupdate_t*)send_seg->data;
+	int n=topology_getNbrNum(),N=topology_getNodeNum();
+	pkt_ru->entryNum = N;
+	header->length = sizeof(pkt_routeupdate_t)*N+sizeof(int);
+	pthread_mutex_lock(dv_mutex);
+	dv_t *dvt = dv+n;
+	header->src_nodeID = dvt->nodeID;
+	dv_entry_t *p=dvt->dvEntry;
+	for (int i=0;i<N;i++) {
+		pkt_ru->entry[i].nodeID = p->nodeID;
+		pkt_ru->entry[i].cost = p->cost;
+		p++;
+	}
+	pthread_mutex_unlock(dv_mutex);
+}
+
 void* routeupdate_daemon(void* arg) {
 	//你需要编写这里的代码.
-	sip_pkt_t* send_seg=malloc(sizeof(sip_pkt_t));
-	memset(send_seg,0,sizeof(sip_pkt_t));
+/*	memset(send_seg,0,sizeof(sip_pkt_t));	
 	sip_hdr_t* header=(sip_hdr_t*)send_seg;
 	header->src_nodeID=topology_getMyNodeID();
 	header->dest_nodeID=BROADCAST_NODEID;
 	header->type=ROUTE_UPDATE;
-	header->length=0;
+	header->length=0;*/
 	while (1){
+		sip_pkt_t* send_seg=malloc(sizeof(sip_pkt_t));
+		build_routeupdate_pkt(send_seg);
 		if (son_sendpkt(BROADCAST_NODEID,send_seg,son_conn)<0){
 			puts("Route Send Error!");
 		}
 		puts("Route Send Success!");
+		free(send_seg);
 		sleep(ROUTEUPDATE_INTERVAL);
 	}
-	free(send_seg);
 	return 0;
 }
 
@@ -98,7 +120,18 @@ void* routeupdate_daemon(void* arg) {
 //就根据路由表转发报文给下一跳.如果报文是路由更新报文,就更新距离矢量表和路由表.
 void* pkthandler(void* arg) {
 	//你需要编写这里的代码.
-  return 0;
+	while (1) {
+		sip_pkt_t* pkt = malloc(sizeof(sip_pkt_t));
+		son_recvpkt(pkt,son_conn);
+		sip_hdr_t* hdr = &pkt->header;
+		if (hdr->type==SIP) {
+			if (hdr->dest_nodeID==topology_getMyNodeID()) {
+				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)pkt->data)->seg);
+			}
+		} else {
+			
+		}
+	}
 }
 
 //这个函数终止SIP进程, 当SIP进程收到信号SIGINT时会调用这个函数. 
