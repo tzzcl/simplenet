@@ -91,5 +91,6 @@ unsigned short checksum(seg_t* segment);
 //这个函数检查段中的校验和, 正确时返回1, 错误时返回-1.
 int checkchecksum(seg_t* segment);
 void print_seg(seg_t* seg);
+int recv_onebyte(int connection,char* ch);
 
 #endif
