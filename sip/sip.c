@@ -159,6 +159,7 @@ void* pkthandler(void* arg) {
 		son_recvpkt(pkt,son_conn);
 		sip_hdr_t* hdr = &pkt->header;
 		if (hdr->type==SIP) {
+			printf("%s: receive SIP pkt\n",__FUNCTION__);
 			if (hdr->dest_nodeID==topology_getMyNodeID()) {
 				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)pkt->data)->seg);
 			} else {
@@ -167,6 +168,7 @@ void* pkthandler(void* arg) {
 				pthread_mutex_unlock(routingtable_mutex);
 			}
 		} else { //hdr->type==ROUTE_UPDATE
+			printf("%s: receive ROUTE_UPDATE pkt\n",__FUNCTION__);
 			update_route((pkt_routeupdate_t*)pkt->data,hdr->src_nodeID);
 		}
 	}
