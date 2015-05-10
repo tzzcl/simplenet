@@ -202,7 +202,8 @@ void waitSTCP() {
 		seg_t *segPtr=(seg_t*)&sip_pkt->data;
 		while (1) {
 			memset(sip_pkt,0,sizeof(sip_pkt_t));
-			if (getsegToSend(stcp_conn,&dest_nodeID,segPtr)==-1) break;
+			if (getsegToSend(stcp_conn,&dest_nodeID,segPtr)!=0) break;
+			printf("%s: get seg to send, dest: %d\n",__FUNCTION__,dest_nodeID);
 			int nextNodeID=routingtable_getnextnode(routingtable,dest_nodeID);
 			son_sendpkt(nextNodeID,sip_pkt,son_conn);
 		}
