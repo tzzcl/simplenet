@@ -122,6 +122,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 	pthread_mutex_lock(dv_mutex);
 	int n=topology_getNbrNum(),N=topology_getNodeNum(),m=topology_getMyNodeID();
 	for (int i=0;i<pkt_ru->entryNum;i++) {
+		printf("%s:i=%d\n",__FUNCTION__,i);
 		int dest_nodeID = pkt_ru->entry[i].nodeID;
 		unsigned int cost = pkt_ru->entry[i].cost;
 		if (dvtable_getcost(dv,src_nodeID,dest_nodeID)>cost) {
@@ -131,8 +132,10 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 	int *a=topology_getNbrArray(),*A=topology_getNodeArray();
 	pthread_mutex_lock(routingtable_mutex);
 	for (int i=0;i<n;i++) {
+		printf("%s:i=%d\n",__FUNCTION__,i);
 		int fromID=a[i];
 		for (int j=0;j<N;j++) {
+		printf("%s:j=%d\n",__FUNCTION__,j);
 			int toID=A[i];
 			int cost=nbrcosttable_getcost(nct,fromID)+dvtable_getcost(dv,fromID,toID);
 			if (cost<dvtable_getcost(dv,m,toID)) {

@@ -136,7 +136,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 		int fromID=a[i];
 		for (int j=0;j<N;j++) {
 		printf("%s:j=%d\n",__FUNCTION__,j);
-			int toID=A[i];
+			int toID=A[j];
 			int cost=nbrcosttable_getcost(nct,fromID)+dvtable_getcost(dv,fromID,toID);
 			if (cost<dvtable_getcost(dv,m,toID)) {
 				dvtable_setcost(dv,m,toID,cost);
