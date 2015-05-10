@@ -176,6 +176,11 @@ void* pkthandler(void* arg) {
 //它关闭所有连接, 释放所有动态分配的内存.
 void sip_stop() {
 	//你需要编写这里的代码.
+	nbrcosttable_destroy(nct);
+	dvtable_destroy(dv);
+	routingtable_destroy(routingtable);
+	free(dv_mutex);
+	free(routingtable_mutex);
   return;
 }
 
@@ -185,6 +190,30 @@ void sip_stop() {
 //当本地STCP进程断开连接时, 这个函数等待下一个STCP进程的连接.
 void waitSTCP() {
 	//你需要编写这里的代码.
+	int listenfd = socket(AF_INET,SOCK_STREAM,0);
+	struct sockaddr_in saddr,caddr;
+	saddr.sin_family = AF_INET;
+	saddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	saddr.sin_port = htons(SIP_PORT);
+	bind(listenfd,(struct sockaddr*)&saddr,sizeof(saddr));
+	listen(listenfd,1);
+	int clen=sizeof(caddr);
+	while (1) {
+		stcp_conn = accept(listenfd,(struct sockaddr*)&caddr,&clen);
+		printf("%s: accept stcp connect\n",__FUNCTION__);
+		int dest_nodeID;
+		sip_pkt_t *sip_pkt=malloc(sizeof(sip_pkt_t));
+		seg_t *segPtr=(seg_t*)&sip_pkt->data;
+		while (1) {
+			memset(sip_pkt,0,sizeof(sip_pkt_t));
+			if (getsegToSend(stcp_conn,&dest_nodeID,segPtr)==11) break;
+			int nextNodeID=routingtable_getnextnode(routingtable,dest_nodeID);
+			son_sendpkt(nextNodeID,sip_pkt,son_conn);
+		}
+		close(stcp_conn);
+		printf("%s: close stcp connect\n",__FUNCTION__);
+		free(sip_pkt);
+	}
   return;
 }
 
