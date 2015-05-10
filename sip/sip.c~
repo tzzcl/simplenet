@@ -148,7 +148,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 
 void* pkthandler(void* arg) {
 	//你需要编写这里的代码.
-	printf("%s: thread start\n",__FUNCTION__);i
+	printf("%s: thread start\n",__FUNCTION__);
 	sip_pkt_t* pkt = malloc(sizeof(sip_pkt_t));
 	sip_hdr_t* hdr = &pkt->header;
 	while (1) {
