@@ -30,6 +30,7 @@ nbr_cost_entry_t* nbrcosttable_create()
 	nct->cost=topology_getCost(m,a[i]);
 	nct++;
   }
+  free(a);
   return nct-n;
 }
 
@@ -58,7 +59,7 @@ unsigned int nbrcosttable_getcost(nbr_cost_entry_t* nct, int nodeID)
 //这个函数打印邻居代价表的内容.
 void nbrcosttable_print(nbr_cost_entry_t* nct)
 {
-  printf("NODE %d:\nNODEID\tCOST\n",topology_getMyNodeID());
+  printf("Neighbor Cost Table, NODE %d:\nNODEID\tCOST\n",topology_getMyNodeID());
   for (int n=topology_getNbrNum();n>0;n--) {
 	printf("%d\t%d\n",nct->nodeID,nct->cost);
 	nct++;

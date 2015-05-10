@@ -17,7 +17,7 @@
 //该函数返回动态创建的距离矢量表.
 dv_t* dvtable_create()
 {
-  int m=getMyNodeID();
+  int m = topology_getMyNodeID();
   if (m==-1) {
 	printf("%s: getMyNodeID failed\n",__FUNCTION__);
 	return NULL;
@@ -43,6 +43,8 @@ dv_t* dvtable_create()
 	dve->cost = topology_getCost(m,A[j]);
 	dve++;
   }
+  free(a);
+  free(A);
   return dvtable-n;
 }
 
@@ -50,6 +52,15 @@ dv_t* dvtable_create()
 //它释放所有为距离矢量表动态分配的内存.
 void dvtable_destroy(dv_t* dvtable)
 {
+  int n = topology_getNbrNum(),N = topology_getNodeNum();
+  for (int i=0;i<=n;i++) {
+	for (int j=0;j<N;j++) {
+		free(dvtable->dvEntry);
+		dvtable->dvEntry++;
+	}
+	free(dvtable);
+	dvtable++;
+  }
   return;
 }
 
@@ -57,18 +68,79 @@ void dvtable_destroy(dv_t* dvtable)
 //如果这2个节点在表中发现了,并且链路代价也被成功设置了,就返回1,否则返回-1.
 int dvtable_setcost(dv_t* dvtable,int fromNodeID,int toNodeID, unsigned int cost)
 {
-  return 0;
+  int n = topology_getNbrNum(),N = topology_getNodeNum();
+  int cnt = 0;
+  for (int i=0;i<=n;i++) {
+	if (dvtable->nodeID==fromNodeID) {
+		dv_entry_t *dve = dvtable->dvEntry;
+		for (int j=0;j<N;j++) {
+			if (dve->nodeID==toNodeID) {
+				cnt++;
+				dve->cost=cost;
+				break;
+			}
+			dve++;
+		}
+	} else if (dvtable->nodeID==toNodeID) {
+		dv_entry_t *dve = dvtable->dvEntry;
+		for (int j=0;j<N;j++) {
+			if (dve->nodeID==fromNodeID) {
+				cnt++;
+				dve->cost=cost;
+				break;
+			}
+			dve++;
+		}
+	}
+	if (cnt==2) return 1;
+	dvtable++;
+  }
+  return -1;
 }
 
 //这个函数返回距离矢量表中2个节点之间的链路代价.
 //如果这2个节点在表中发现了,就返回链路代价,否则返回INFINITE_COST.
 unsigned int dvtable_getcost(dv_t* dvtable, int fromNodeID, int toNodeID)
 {
-  return 0;
+  for (int i=0;i<=n;i++) {
+	if (dvtable->nodeID==fromNodeID) {
+		dv_entry_t *dve = dvtable->dvEntry;
+		for (int j=0;j<N;j++) {
+			if (dve->nodeID==toNodeID) return dve->cost;
+			dve++;
+		}
+	} else if (dvtable->nodeID==toNodeID) {
+		dv_entry_t *dve = dvtable->dvEntry;
+		for (int j=0;j<N;j++) {
+			if (dve->nodeID==fromNodeID) return dve->cost;
+			dve++;
+		}
+	}
+	dvtable++;
+  }
+  return INFINITE_COST;
 }
 
 //这个函数打印距离矢量表的内容.
 void dvtable_print(dv_t* dvtable)
 {
+  printf("Distance Vector Table, NODE %d:\n",topology_getMyNodeID());
+  int n = topology_getNbrNum(),N = topology_getNodeNum();
+  printf("COST");
+  dv_entry_t *dve=dvtable->dvEntry;
+  for (int j=0;j<N;j++) {
+	printf("\t%d",dve->nodeID);
+	dve++;
+  }
+  for (int i=0;i<n;i++) {
+	printf("\n%d",dvtable->nodeID);
+	dv_entry_t *dve=dvtable->dvEntry;
+	for (int j=0;j<N;j++) {
+		printf("\t%d",dve->cost);
+		dve++;
+	}
+	dvtable++;
+  }
+  printf("\n");
   return;
 }
