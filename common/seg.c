@@ -170,7 +170,7 @@ int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 	if (send(stcp_conn,"!&",2,0)<=0) goto bad;
 	seg_arg->nodeID = src_nodeID;
 	memcpy(&seg_arg->seg,segPtr,sizeof(seg_t));
-	stcp_hdr_t *header=&(seg_arg->seg.header);
+	//stcp_hdr_t *header=&(seg_arg->seg.header);
 	/*header->checksum=0;
 	header->checksum=checksum(&seg_arg->seg);*/
 	if (send(stcp_conn,seg_arg,sizeof(sendseg_arg_t),0)>=0) goto bad;

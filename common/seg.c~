@@ -29,7 +29,7 @@ bad:
 //当接收到段时, 使用seglost()来判断该段是否应被丢弃并检查校验和.
 //下行有修正！
 	//如果成功接收到sendseg_arg_t就返回0, 否则返回1.
-/*int recv_onebyte(int connection,char* ch){
+int recv_onebyte(int connection,char* ch){
 	char buf[2];memset(buf,0,sizeof(buf));
 	int n=recv(connection,buf,1,0);
 	if (n<=0) {
@@ -38,7 +38,7 @@ bad:
 	}
 	ch[0]=buf[0];
 	return 0;
-}*/
+}
 int sip_recvseg(int sip_conn, int* src_nodeID, seg_t* segPtr)
 {
   int state=0;
