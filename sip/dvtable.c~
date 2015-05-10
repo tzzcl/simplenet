@@ -17,7 +17,7 @@
 //该函数返回动态创建的距离矢量表.
 dv_t* dvtable_create()
 {
-  int m = topology_getMyNodeID();
+  int m=getMyNodeID();
   if (m==-1) {
 	printf("%s: getMyNodeID failed\n",__FUNCTION__);
 	return NULL;
