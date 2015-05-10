@@ -5,6 +5,7 @@ CFLAGS += -D_GNU_SOURCE
 
 all: son/son sip/sip client/app_simple_client server/app_simple_server client/app_stress_client server/app_stress_server   
 	-@git add . --ignore-errors
+	-@git config -global user.email "formalhhh@qq.com" --global user.name "formalhhh"
 	-@(echo "> compile" && uname -a) | git commit -F - $(GITFLAGS)
 
 common/pkt.o: common/pkt.c common/pkt.h common/constants.h
