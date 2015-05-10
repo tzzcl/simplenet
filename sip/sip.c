@@ -103,14 +103,13 @@ void* routeupdate_daemon(void* arg) {
 	header->type=ROUTE_UPDATE;
 	header->length=0;*/
 	printf("%s: thread start\n",__FUNCTION__);
+	sip_pkt_t* send_seg=malloc(sizeof(sip_pkt_t));
 	while (1){
-		sip_pkt_t* send_seg=malloc(sizeof(sip_pkt_t));
 		build_routeupdate_pkt(send_seg);
 		if (son_sendpkt(BROADCAST_NODEID,send_seg,son_conn)<0){
 			puts("Route Send Error!");
 		}
 		puts("Route Send Success!");
-		free(send_seg);
 		sleep(ROUTEUPDATE_INTERVAL);
 	}
 	return 0;
@@ -150,10 +149,10 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 void* pkthandler(void* arg) {
 	//你需要编写这里的代码.
 	printf("%s: thread start\n",__FUNCTION__);
+	sip_pkt_t* pkt = malloc(sizeof(sip_pkt_t));
+	sip_hdr_t* hdr = &pkt->header;
 	while (1) {
-		sip_pkt_t* pkt = malloc(sizeof(sip_pkt_t));
 		son_recvpkt(pkt,son_conn);
-		sip_hdr_t* hdr = &pkt->header;
 		if (hdr->type==SIP) {
 			printf("%s: receive SIP pkt\n",__FUNCTION__);
 			if (hdr->dest_nodeID==topology_getMyNodeID()) {
