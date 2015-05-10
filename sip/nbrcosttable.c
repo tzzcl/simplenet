@@ -28,6 +28,7 @@ nbr_cost_entry_t* nbrcosttable_create()
   for (int i=0;i<n;i++) {
 	nct->nodeID=a[i];
 	nct->cost=topology_getCost(m,a[i]);
+	printf("%s: nct->cost: %d\n",__FUNCTION__,nct->cost);
 	nct++;
   }
   free(a);
