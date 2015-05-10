@@ -38,6 +38,7 @@ dv_t* dvtable_create()
   }
   dvtable->nodeID = m;
   dv_entry_t *dve=malloc(sizeof(dv_entry_t)*N);
+  dvtable->dvEntry = dve;
   for (int j=0;j<N;j++) {
 	dve->nodeID = A[j];
 	dve->cost = topology_getCost(m,A[j]);
@@ -45,7 +46,7 @@ dv_t* dvtable_create()
   }
   free(a);
   free(A);
-  return dvtable-n-1;
+  return dvtable-n;
 }
 
 //这个函数删除距离矢量表.
