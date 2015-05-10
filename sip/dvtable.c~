@@ -102,6 +102,7 @@ int dvtable_setcost(dv_t* dvtable,int fromNodeID,int toNodeID, unsigned int cost
 //如果这2个节点在表中发现了,就返回链路代价,否则返回INFINITE_COST.
 unsigned int dvtable_getcost(dv_t* dvtable, int fromNodeID, int toNodeID)
 {
+  int n = topology_getNbrNum(),N = topology_getNodeNum();
   for (int i=0;i<=n;i++) {
 	if (dvtable->nodeID==fromNodeID) {
 		dv_entry_t *dve = dvtable->dvEntry;
