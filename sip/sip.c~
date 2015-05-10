@@ -102,6 +102,7 @@ void* routeupdate_daemon(void* arg) {
 	header->dest_nodeID=BROADCAST_NODEID;
 	header->type=ROUTE_UPDATE;
 	header->length=0;*/
+	printf("%s: thread start\n",__FUNCTION__);
 	while (1){
 		sip_pkt_t* send_seg=malloc(sizeof(sip_pkt_t));
 		build_routeupdate_pkt(send_seg);
@@ -154,6 +155,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 
 void* pkthandler(void* arg) {
 	//你需要编写这里的代码.
+	printf("%s: thread start\n",__FUNCTION__);
 	while (1) {
 		sip_pkt_t* pkt = malloc(sizeof(sip_pkt_t));
 		son_recvpkt(pkt,son_conn);

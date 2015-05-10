@@ -74,18 +74,24 @@ int connectToSON() {
 //这个线程每隔ROUTEUPDATE_INTERVAL时间发送路由更新报文.路由更新报文包含这个节点
 //的距离矢量.广播是通过设置SIP报文头中的dest_nodeID为BROADCAST_NODEID,并通过son_sendpkt()发送报文来完成的.
 void build_routeupdate_pkt(sip_pkt_t* send_seg) {
+	printf("%s: dump test\n",__FUNCTION__);
 	sip_hdr_t *header = &send_seg->header;
 	header->dest_nodeID = BROADCAST_NODEID;
 	header->type = ROUTE_UPDATE;
+	printf("%s: dump test\n",__FUNCTION__);
 	memset(send_seg->data,0,MAX_PKT_LEN);
 	pkt_routeupdate_t *pkt_ru = (pkt_routeupdate_t*)send_seg->data;
 	int n=topology_getNbrNum(),N=topology_getNodeNum();
 	pkt_ru->entryNum = N;
+	printf("%s: dump test\n",__FUNCTION__);
 	header->length = sizeof(pkt_routeupdate_t)*N+sizeof(int);
 	pthread_mutex_lock(dv_mutex);
+	printf("%s: dump test\n",__FUNCTION__);
 	dv_t *dvt = dv+n;
 	header->src_nodeID = dvt->nodeID;
+	printf("%s: dump test\n",__FUNCTION__);
 	dv_entry_t *p=dvt->dvEntry;
+	printf("%s: dump test\n",__FUNCTION__);
 	for (int i=0;i<N;i++) {
 		pkt_ru->entry[i].nodeID = p->nodeID;
 		pkt_ru->entry[i].cost = p->cost;
@@ -106,6 +112,7 @@ void* routeupdate_daemon(void* arg) {
 	while (1){
 		sip_pkt_t* send_seg=malloc(sizeof(sip_pkt_t));
 		build_routeupdate_pkt(send_seg);
+		printf("%s: dump test\n",__FUNCTION__);
 		if (son_sendpkt(BROADCAST_NODEID,send_seg,son_conn)<0){
 			puts("Route Send Error!");
 		}
