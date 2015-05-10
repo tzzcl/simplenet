@@ -45,7 +45,7 @@ dv_t* dvtable_create()
   }
   free(a);
   free(A);
-  return dvtable-n;
+  return dvtable-n-1;
 }
 
 //这个函数删除距离矢量表.
