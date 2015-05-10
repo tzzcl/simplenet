@@ -192,6 +192,8 @@ void waitSTCP() {
 	//你需要编写这里的代码.
 	int listenfd = socket(AF_INET,SOCK_STREAM,0);
 	struct sockaddr_in saddr,caddr;
+	memset(&saddr,0,sizeof(saddr));
+	memset(&caddr,0,sizeof(caddr));
 	saddr.sin_family = AF_INET;
 	saddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	saddr.sin_port = htons(SIP_PORT);
