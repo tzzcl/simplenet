@@ -196,7 +196,7 @@ void waitSTCP() {
 	int clen=sizeof(caddr);
 	while (1) {
 		stcp_conn = accept(listenfd,(struct sockaddr*)&caddr,&clen);
-		printf("%s: accept stcp connect\n",__FUNCTION__);
+		printf("%s: accept stcp connect, stcp_conn:%d\n",__FUNCTION__,stcp_conn);
 		int dest_nodeID;
 		sip_pkt_t *sip_pkt=malloc(sizeof(sip_pkt_t));
 		seg_t *segPtr=(seg_t*)&sip_pkt->data;

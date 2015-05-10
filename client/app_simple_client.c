@@ -52,6 +52,7 @@ int connectToSIP() {
 	if (connect(sip_conn,(struct sockaddr *)&saddr,sizeof(saddr))<0) {
 		perror("connect error");return -1;
 	}
+	printf("%s: connect to sip, sip_conn: %d\n",__FUNCTION__,sip_conn);
 	return sip_conn;
 }
 
