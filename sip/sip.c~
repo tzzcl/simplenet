@@ -118,6 +118,40 @@ void* routeupdate_daemon(void* arg) {
 //这个线程处理来自SON进程的进入报文. 它通过调用son_recvpkt()接收来自SON进程的报文.
 //如果报文是SIP报文,并且目的节点就是本节点,就转发报文给STCP进程. 如果目的节点不是本节点,
 //就根据路由表转发报文给下一跳.如果报文是路由更新报文,就更新距离矢量表和路由表.
+void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
+	pthread_mutex_lock(dv_mutex);
+	int n=topology_getNbrNum(),N=topology_getNodeNum(),m=topology_getMyNodeID();
+	for (int i=0;i<pkt_ru->entryNum;i++) {
+		int dest_nodeID = pkt_ru->entry[i].nodeID;
+		unsigned int cost = pkt_ru->entry[i].cost;
+		if (dvtable_getcost(dv,src_nodeID,dest_nodeID)>cost) {
+			dvtable_setcost(dv,src_nodeID,dest_nodeID,cost);
+			/*for (int j=0;j<N;j++) {
+				int ncost = nbrcosttable_getcost(nct,src_nodeID);
+				if (ncost+cost<dvtable_getcost(dv,m,dest_nodeID)) {
+					dvtable_setcost(dv,m,dest_nodeID,ncost+cost);
+					pthread_mutex_lock(routingtable_mutex);
+					routingtable_*/
+		}
+	}
+	int *a=topology_getNbrArray(),*A=topology_getNodeArray();
+	pthread_mutex_lock(routingtable_mutex);
+	for (int i=0;i<n;i++) {
+		int fromID=a[i];
+		for (int j=0;j<N;j++) {
+			int toID=A[i];
+			//int oldID=routingtable_getnextnode(routingtable,toID);
+			int cost=nbrcosttable_getcost(nct,fromID)+dvtable_getcost(dv,fromID,toID);
+			if (cost<dvtable_getcost(dv,m,toID)) {
+				dvtable_setcost(dv,m,toID,cost);
+				routingtable_setnextnode(routingtable,toID,fromID);
+			}
+		}
+	}
+	pthread_mutex_unlock(routingtable_mutex);
+	pthread_mutex_unlock(dv_mutex);
+}
+
 void* pkthandler(void* arg) {
 	//你需要编写这里的代码.
 	while (1) {
@@ -129,15 +163,11 @@ void* pkthandler(void* arg) {
 				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)pkt->data)->seg);
 			} else {
 				pthread_mutex_lock(routingtable_mutex);
-				for (routingtable_entry_t *p=routingtable->hash[makehash(hdr->dest_nodeID)];p!=NULL;p=p->next) {
-					if (hdr->dest_nodeID==p->destNodeID) { son_sendpkt(nextNodeID,pkt,son_conn);
-					break;
-					}
-				}
+				son_sendpkt(routingtable_getnextnode(routingtable,hdr->dest_nodeID,pkt,son_conn);
 				pthread_mutex_unlock(routingtable_mutex);
 			}
-		} else {
-			
+		} else { //hdr->type==ROUTE_UPDATE
+			update_route((pkt_routeupdate_t*)pkt->data,hdr->src_nodeID);
 		}
 	}
 }

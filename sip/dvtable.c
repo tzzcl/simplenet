@@ -69,31 +69,18 @@ void dvtable_destroy(dv_t* dvtable)
 int dvtable_setcost(dv_t* dvtable,int fromNodeID,int toNodeID, unsigned int cost)
 {
   int n = topology_getNbrNum(),N = topology_getNodeNum();
-  int cnt = 0;
   for (int i=0;i<=n;i++) {
 	if (dvtable->nodeID==fromNodeID) {
 		dv_entry_t *dve = dvtable->dvEntry;
 		for (int j=0;j<N;j++) {
 			if (dve->nodeID==toNodeID) {
-				cnt++;
 				dve->cost=cost;
-				break;
+				return 1;
 			}
 			dve++;
 		}
-	} else if (dvtable->nodeID==toNodeID) {
-		dv_entry_t *dve = dvtable->dvEntry;
-		for (int j=0;j<N;j++) {
-			if (dve->nodeID==fromNodeID) {
-				cnt++;
-				dve->cost=cost;
-				break;
-			}
-			dve++;
-		}
-	}
-	if (cnt==2) return 1;
 	dvtable++;
+	}
   }
   return -1;
 }
@@ -110,14 +97,8 @@ unsigned int dvtable_getcost(dv_t* dvtable, int fromNodeID, int toNodeID)
 			if (dve->nodeID==toNodeID) return dve->cost;
 			dve++;
 		}
-	} else if (dvtable->nodeID==toNodeID) {
-		dv_entry_t *dve = dvtable->dvEntry;
-		for (int j=0;j<N;j++) {
-			if (dve->nodeID==fromNodeID) return dve->cost;
-			dve++;
-		}
-	}
 	dvtable++;
+	}
   }
   return INFINITE_COST;
 }
