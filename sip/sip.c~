@@ -156,9 +156,9 @@ void* pkthandler(void* arg) {
 			printf("%s: receive SIP pkt\n",__FUNCTION__);
 			if (hdr->dest_nodeID==m) {
 				printf("ii's to me, forward it to stcp\n");
-				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)pkt->data)->seg);
+				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)(pkt->data))->seg);
 			} else {
-				pritnf("it's not to me, push it back\n");
+				printf("it's not to me, push it back\n");
 				pthread_mutex_lock(routingtable_mutex);
 				son_sendpkt(routingtable_getnextnode(routingtable,hdr->dest_nodeID),pkt,son_conn);
 				pthread_mutex_unlock(routingtable_mutex);
