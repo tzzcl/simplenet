@@ -167,7 +167,6 @@ void* pkthandler(void* arg) {
 				printf("it's not to me, push it down\n");
 				pthread_mutex_lock(routingtable_mutex);
 				son_sendpkt(routingtable_getnextnode(routingtable,hdr->dest_nodeID),pkt,son_conn);
-				}
 				pthread_mutex_unlock(routingtable_mutex);
 			}
 		} else { //hdr->type==ROUTE_UPDATE

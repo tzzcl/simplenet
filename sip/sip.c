@@ -125,8 +125,8 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 		int dest_nodeID = pkt_ru->entry[i].nodeID;
 		unsigned int cost = pkt_ru->entry[i].cost;
 		dvtable_setcost(dv,src_nodeID,dest_nodeID,cost);
-		if (routingtable_getnextnode(routingtable,dest_nodeID)==src_nodeID) {
-			dvtable_setcost(dv,m,dest_nodeID,cost+dvtable_getcost(dv,m,src_nodeID));
+		if (routingtable_getnextnode(routingtable,dest_nodeID)==src_nodeID&&cost==INFINITE_COST) {
+			dvtable_setcost(dv,m,dest_nodeID,INFINITE_COST);
 		}
 	}
 	pthread_mutex_lock(routingtable_mutex);
