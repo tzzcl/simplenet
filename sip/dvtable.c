@@ -41,7 +41,7 @@ dv_t* dvtable_create()
   dvtable->dvEntry = dve;
   for (int j=0;j<N;j++) {
 	dve->nodeID = A[j];
-	if (m==A[j]) dve->cost = 0;
+	//if (m==A[j]) dve->cost = 0;
 	else dve->cost = topology_getCost(m,A[j]);
 	dve++;
   }
