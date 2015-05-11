@@ -179,7 +179,7 @@ bad:
 //如果sendseg_arg_t被成功发送就返回1, 否则返回-1.
 int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 {
-	sendseg_arg_t *seg_arg = malloc(sizeof(sendseg_arg_t));
+	//sendseg_arg_t *seg_arg = malloc(sizeof(sendseg_arg_t));
 	if (send(stcp_conn,"!&",2,0)<=0) goto bad;
 	if (send(stcp_conn,&src_nodeID,sizeof(int),0)<=0) goto bad;
 	stcp_hdr_t *header=&(segPtr->header);

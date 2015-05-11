@@ -265,12 +265,17 @@ unsigned short checksum(seg_t* segment) {
 
 //这个函数检查段中的校验和, 正确时返回1, 错误时返回-1.
 int checkchecksum(seg_t* segment) {
+	int temp=checksum(segment);
+	if (checksum(segment)==0)return 1;
+	return -1;
+}
+/*int checkchecksum(seg_t* segment) {
 	int temp=segment->header.checksum;
 	int r=(checksum(segment)==0);
 	segment->header.checksum=temp;
 	if (r)return 1;
 	return -1;
-}
+}*/
 void print_seg(seg_t* seg){/*
 	printf("segment:\n");
 	stcp_hdr_t * header=&(seg->header);
