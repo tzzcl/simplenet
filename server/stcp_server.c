@@ -60,7 +60,7 @@ void stcp_server_init(int conn)
 // TCB表中条目的索引应作为服务器的新套接字ID被这个函数返回, 它用于标识服务器端的连接. 
 // 如果TCB表中没有条目可用, 这个函数返回-1.
 void server_table_init(server_tcb_t* server_t,unsigned int server_port){
-	server_t->server_nodeID=0;
+	server_t->server_nodeID=topology_getMyNodeID();
 	server_t->server_portNum=server_port;
 	server_t->client_nodeID=0;
 	server_t->client_portNum=0;
@@ -220,6 +220,7 @@ void* seghandler(void* arg)
 							puts("A");
 						if (recv_seg->header.type==SYN){
 							printf("%d sock receive SYN,turned into connected\n",i);
+							server_table[i]->client_nodeID=src;
 							server_table[i]->client_portNum=recv_seg->header.src_port;
 							init_seg(send_seg,server_table[i],SYNACK);
 //							sip_sendseg(conn_stcp,send_seg);
