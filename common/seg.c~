@@ -142,7 +142,7 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 			goto bad;
 		}*/
 		*dest_nodeID = seg_arg->nodeID;
-		//printf("Receive Seg From Node %d:\n",*dest_nodeID);
+		printf("Seg sending to %d:\n",*dest_nodeID);
 		memcpy(segPtr,&seg_arg->seg,sizeof(seg_t));
 		print_seg(segPtr);
 		break;	

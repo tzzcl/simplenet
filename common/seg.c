@@ -260,13 +260,11 @@ void print_seg(seg_t* seg){/*
 	printf("checksum is %d\n",header->checksum);*/
 	stcp_hdr_t * header=&(seg->header);
 	printf(	"-----------------------------------------------------\n"
-		"|  SRC: %3d  |  PORT:%3d  |  DST: %3d  |  PORT:%3d  |\n"
-		"|        SEQ:" "%6d       |       ACK:" "%6d        |\n"
+		"|  SRC: %3d  |  DST: %3d  | SEQ:" "%6d | ACK:" "%6d |\n"
 		"|       LENGTH:""%5d      |        TYPE:%3d         |\n"
 		"|                  CHECKSUM: 0x%04x                 |\n"
 		"-----------------------------------------------------\n"
-		,header->src_nodeID,header->src_port\
-		,headar->dest_nodeID,header->dest_port\
+		,header->src_port,header->dest_port\
 		,header->seq_num,header->ack_num\
 		,header->length,header->type\
 		,header->checksum);
