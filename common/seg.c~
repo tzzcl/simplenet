@@ -174,7 +174,7 @@ int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 	//stcp_hdr_t *header=&(seg_arg->seg.header);
 	/*header->checksum=0;
 	header->checksum=checksum(&seg_arg->seg);*/
-	if (send(stcp_conn,seg_arg,sizeof(sendseg_arg_t),0)<=0) goto bad;
+	if (send(stcp_conn,seg_arg,4+HEADER_LENGTH+segPtr->head.length,0)<=0) goto bad;
 	if (send(stcp_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
 	print_seg(&seg_arg->seg);
@@ -260,13 +260,11 @@ void print_seg(seg_t* seg){/*
 	printf("checksum is %d\n",header->checksum);*/
 	stcp_hdr_t * header=&(seg->header);
 	printf(	"-----------------------------------------------------\n"
-		"|  SRC: %3d  |  PORT:%3d  |  DST: %3d  |  PORT:%3d  |\n"
-		"|        SEQ:" "%6d       |       ACK:" "%6d        |\n"
+		"|  SRC: %3d  |  DST: %3d  | SEQ:" "%6d | ACK:" "%6d |\n"
 		"|       LENGTH:""%5d      |        TYPE:%3d         |\n"
 		"|                  CHECKSUM: 0x%04x                 |\n"
 		"-----------------------------------------------------\n"
-		,header->src_nodeID,header->src_port\
-		,headar->dest_nodeID,header->dest_port\
+		,header->src_port,header->dest_port\
 		,header->seq_num,header->ack_num\
 		,header->length,header->type\
 		,header->checksum);
