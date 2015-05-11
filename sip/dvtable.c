@@ -116,7 +116,7 @@ void dvtable_print(dv_t* dvtable)
 	printf("\t%d",dve->nodeID);
 	dve++;
   }
-  for (int i=0;i<n+1;i++) {
+  for (int i=0;i<=n;i++) {
 	printf("\n%d",dvtable->nodeID);
 	dv_entry_t *dve=dvtable->dvEntry;
 	for (int j=0;j<N;j++) {
