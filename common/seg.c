@@ -6,12 +6,12 @@
 //如果sendseg_arg_t发送成功,就返回1,否则返回-1.
 int sip_sendseg(int sip_conn, int dest_nodeID, seg_t* segPtr)
 {
-	sendseg_arg_t *seg_arg = malloc(sizeof(sendseg_arg_t));
+	//sendseg_arg_t *seg_arg = malloc(sizeof(sendseg_arg_t));
 	if (send(sip_conn,"!&",2,0)<=0) goto bad;
 	if (send(sip_conn,&dest_nodeID,sizeof(int),0)<=0) goto bad;
-	stcp_hdr_t *header=&(segPtr->seg.header);
+	stcp_hdr_t *header=&segPtr->header;
 	header->checksum=0;
-	header->checksum=checksum(&segPtr->seg);
+	header->checksum=checksum(segPtr);
 	if (send(sip_conn,segPtr,HEADER_LENGTH+header->length,0)<=0) goto bad;
 	header->checksum=0;
         printf("%s: succeeded\n",__FUNCTION__);
@@ -183,7 +183,7 @@ int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 	if (send(stcp_conn,"!&",2,0)<=0) goto bad;
 	if (send(stcp_conn,&src_nodeID,sizeof(int),0)<=0) goto bad;
 	stcp_hdr_t *header=&(segPtr->header);
-	if (send(sip_conn,segPtr,HEADER_LENGTH+header->length,0)<=0) goto bad;
+	if (send(stcp_conn,segPtr,HEADER_LENGTH+header->length,0)<=0) goto bad;
 	printf("%s: succeeded\n",__FUNCTION__);
 	print_seg(segPtr);
 	return 1;
