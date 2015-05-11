@@ -35,14 +35,30 @@
 int connectToSIP() {
 
 	//你需要编写这里的代码.
-	
+	int sip_conn;
+	if ((sip_conn = socket(AF_INET,SOCK_STREAM,0))<0) {
+		perror("socket error");return -1;
+	}
+	struct sockaddr_in saddr;
+	memset(&saddr,0,sizeof(saddr));
+	saddr.sin_family = AF_INET;
+	saddr.sin_port = htons(SIP_PORT);
+	if (inet_pton(AF_INET,"127.0.0.1",&saddr.sin_addr)<=0) {
+		perror("inet_pton error for 127.0.0.1");
+		return -1;
+	}
+	if (connect(sip_conn,(struct sockaddr *)&saddr,sizeof(saddr))<0) {
+		perror("connect error");return -1;
+	}
+	return sip_conn;
+}
 }
 
 //这个函数断开到本地SIP进程的TCP连接. 
 void disconnectToSIP(int sip_conn) {
 
 	//你需要编写这里的代码.
-	
+	close(sip_conn);
 }
 
 int main() {
