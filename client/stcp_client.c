@@ -330,10 +330,10 @@ void* seghandler(void* arg)
                 p=p->next;
                 free(client_tcb_pools[i]->sendBufHead);
                 client_tcb_pools[i]->sendBufHead=p;
-              }
+              }/*
               if (p==NULL||p->seg.header.seq_num==recv_seg.header.ack_num) {
                 client_tcb_pools[i]->unAck_segNum = 0;
-              }
+              }*/
               pthread_mutex_unlock(client_tcb_pools[i]->bufMutex);
             }
             break;
