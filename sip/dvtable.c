@@ -99,8 +99,8 @@ unsigned int dvtable_getcost(dv_t* dvtable, int fromNodeID, int toNodeID)
 			if (dve->nodeID==toNodeID) return dve->cost;
 			dve++;
 		}
-	dvtable++;
 	}
+	dvtable++;
   }
   return INFINITE_COST;
 }
