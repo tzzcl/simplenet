@@ -192,10 +192,10 @@ void waitSTCP() {
 	saddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	saddr.sin_port = htons(SIP_PORT);
 	bind(listenfd,(struct sockaddr*)&saddr,sizeof(saddr));
+	printf("%s: listening on listenfd:%d\n",__FUNCTION__,listenfd);
 	listen(listenfd,1);
 	int clen=sizeof(caddr);
 	while (1) {
-		printf("%s: listening on listenfd:%d\n",__FUNCTION__,listenfd);
 		stcp_conn = accept(listenfd,(struct sockaddr*)&caddr,&clen);
 		printf("%s: accept stcp connect, stcp_conn:%d\n",__FUNCTION__,stcp_conn);
 		int dest_nodeID;
