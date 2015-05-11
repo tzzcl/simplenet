@@ -13,11 +13,13 @@ int sip_sendseg(int sip_conn, int dest_nodeID, seg_t* segPtr)
 	header->checksum=0;
 	header->checksum=checksum(segPtr);
 	if (send(sip_conn,segPtr,HEADER_LENGTH+header->length,0)<=0) goto bad;
-	header->checksum=0;
+	if (send(stcp_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
 	print_seg(segPtr);
+	header->checksum=0;
 	return 1;
 bad:
+	header->checksum=0;
         printf("%s: failed\n",__FUNCTION__);
 	return -1;
 	/*seg_arg->nodeID = dest_nodeID;
@@ -184,6 +186,7 @@ int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 	if (send(stcp_conn,&src_nodeID,sizeof(int),0)<=0) goto bad;
 	stcp_hdr_t *header=&(segPtr->header);
 	if (send(stcp_conn,segPtr,HEADER_LENGTH+header->length,0)<=0) goto bad;
+	if (send(stcp_conn,"!#",2,0)<=0) goto bad;
 	printf("%s: succeeded\n",__FUNCTION__);
 	print_seg(segPtr);
 	return 1;
