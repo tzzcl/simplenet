@@ -142,6 +142,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 	free(a);free(A);
 	pthread_mutex_unlock(routingtable_mutex);
 	pthread_mutex_unlock(dv_mutex);
+	dvtable_print(dv);
 }
 
 void* pkthandler(void* arg) {
