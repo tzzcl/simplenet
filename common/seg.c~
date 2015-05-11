@@ -173,7 +173,7 @@ int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 	//stcp_hdr_t *header=&(seg_arg->seg.header);
 	/*header->checksum=0;
 	header->checksum=checksum(&seg_arg->seg);*/
-	if (send(stcp_conn,seg_arg,sizeof(sendseg_arg_t),0)>=0) goto bad;
+	if (send(stcp_conn,seg_arg,sizeof(sendseg_arg_t),0)<=0) goto bad;
 	if (send(stcp_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
 	free(seg_arg);
