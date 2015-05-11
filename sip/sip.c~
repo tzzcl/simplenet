@@ -173,7 +173,7 @@ void* pkthandler(void* arg) {
 void sip_stop() {
 	//你需要编写这里的代码.
 	close(stcp_conn);
-	close(sip_conn);
+	close(son_conn);
 	nbrcosttable_destroy(nct);
 	dvtable_destroy(dv);
 	routingtable_destroy(routingtable);

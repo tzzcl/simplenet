@@ -133,7 +133,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 			int toID=A[j];
 			int cost=nbrcosttable_getcost(nct,fromID)+dvtable_getcost(dv,fromID,toID);
 			int oldID=routingtable_getnextnode(routingtable,toID);
-			if (cost<nbrcosttable_getcost(nct,oldID)+dvtable_getcost(dv,oldID,toID) {
+			if (cost<nbrcosttable_getcost(nct,oldID)+dvtable_getcost(dv,oldID,toID)) {
 				routingtable_setnextnode(routingtable,toID,fromID);
 			}
 		}
