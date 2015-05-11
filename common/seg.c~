@@ -36,6 +36,7 @@ int recv_onebyte(int connection,char* ch){
 		//perror("Receive Error!");
 		return -1;
 	}
+	printf("Receive 1 byte\n");
 	ch[0]=buf[0];
 	return 0;
 }

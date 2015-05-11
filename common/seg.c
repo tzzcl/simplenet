@@ -32,11 +32,11 @@ bad:
 int recv_onebyte(int connection,char* ch){
 	char buf[2];memset(buf,0,sizeof(buf));
 	int n=recv(connection,buf,1,0);
-	printf("Receive 1 byte\n");
 	if (n<=0) {
 		//perror("Receive Error!");
 		return -1;
 	}
+	printf("Receive 1 byte\n");
 	ch[0]=buf[0];
 	return 0;
 }
