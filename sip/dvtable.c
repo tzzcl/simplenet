@@ -81,8 +81,8 @@ int dvtable_setcost(dv_t* dvtable,int fromNodeID,int toNodeID, unsigned int cost
 			}
 			dve++;
 		}
-	dvtable++;
 	}
+	dvtable++;
   }
   return -1;
 }
