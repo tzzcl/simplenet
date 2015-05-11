@@ -206,6 +206,17 @@ int forwardpktToSIP(sip_pkt_t* pkt, int sip_conn)
 // 如果报文发送成功, 返回1, 否则返回-1.
 int sendpkt(sip_pkt_t* pkt, int conn)
 {
+	printf("Send %d\n",conn);
+	if (send(conn,"!&",2,0)<=0) goto bad;
+	int nowlength=pkt->header.length;
+	if (send(conn,pkt,PKT_HEADER_LENGTH+nowlength,0)<=0) goto bad;
+	if (send(conn,"!#",2,0)<=0) goto bad;
+        	printf("sendpkt: succeeded\n");
+	free(send_seg);
+	return 1;
+ bad:
+       	printf("sendpkt: failed\n");
+	return -1;
 	/*sip_pkt_t* send_seg=malloc(sizeof(sip_pkt_t));
 	memcpy(send_seg,pkt,sizeof(sip_pkt_t));
 	printf("Send %d\n",conn);

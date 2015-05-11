@@ -25,6 +25,9 @@ int son_sendpkt(int nextNodeID, sip_pkt_t* pkt, int son_conn)
 	if (send(son_conn,"!#",2,0)<=0) goto bad;
         printf("son_sendpkt: succeeded\n");
 	return 1;
+bad:
+	printf("son_sendpkt: failed\n");
+	return -1;
 /*	sendpkt_arg_t* send_seg=malloc(sizeof(sendpkt_arg_t));
 	send_seg->nextNodeID=nextNodeID;
 	memcpy(&send_seg->pkt,pkt,sizeof(sip_pkt_t));
