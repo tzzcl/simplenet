@@ -46,7 +46,7 @@ void stcp_server_init(int conn)
   for (int i=0;i<MAX_TRANSPORT_CONNECTIONS;i++){
     	server_table[i]=NULL;
 	}
-  	pthread_mutex_init(listens_mutex,NULL);
+  	pthread_mutex_init(&listens_mutex,NULL);
 	memset(time_out,0,sizeof(time_out));
 	conn_stcp=conn;
 	listens=-1;
@@ -89,12 +89,12 @@ int stcp_server_sock(unsigned int server_port)
 // 当发生了转换时, 该函数返回1. 你可以使用不同的方法来实现这种阻塞等待.
 int stcp_server_accept(int sockfd) 
 {
-	pthread_mutex_lock(listens_mutex);
+	pthread_mutex_lock(&listens_mutex);
 	if (listens==-1){
 		conn_stcp=accept(conn_stcp,(struct sockaddr *)&cliaddr,&clilen);
 		listens=0;
 	}
-	pthread_mutex_unlock(listens_mutex);
+	pthread_mutex_unlock(&listens_mutex);
 	server_table[sockfd]->state=LISTENING;
 	while (server_table[sockfd]->state!=CONNECTED) ;
 	return 1;

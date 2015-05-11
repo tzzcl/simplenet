@@ -91,7 +91,9 @@ int stcp_server_accept(int sockfd)
 {
 	pthread_mutex_lock(&listens_mutex);
 	if (listens==-1){
-		conn_stcp=accept(conn_stcp,(struct sockaddr *)&cliaddr,&clilen);
+		int ret=accept(conn_stcp,(struct sockaddr *)&cliaddr,&clilen);
+		fprintf("%s: accept sock to %d > conn_stcp\n",__FUNCTION__,ret);
+		conn_stcp=ret;
 		listens=0;
 	}
 	pthread_mutex_unlock(&listens_mutex);
