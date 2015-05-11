@@ -75,10 +75,10 @@ int sip_recvseg(int sip_conn, int* src_nodeID, seg_t* segPtr)
 		  }
 	}
 	if (state==4){
-		if (head-(char*)seg_arg>sizeof(sendseg_arg_t)){
+		/*if (head-(char*)seg_arg>sizeof(sendseg_arg_t)){
 			printf("%s: bad recv length %d\n",head-(char*)seg_arg);
 			goto bad;
-		}
+		}*/
 		*src_nodeID = seg_arg->nodeID;
 		printf("Receive Seg From Node %d:\n",*src_nodeID);
 		memcpy(segPtr,&seg_arg->seg,sizeof(seg_t));
@@ -137,10 +137,10 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 		  }
 	}
 	if (state==4){
-		if (head-(char*)seg_arg>sizeof(sendseg_arg_t)){
+		/*if (head-(char*)seg_arg>sizeof(sendseg_arg_t)){
 			printf("%s: bad recv length %d\n",__FUNCTION__,head-(char*)seg_arg);
 			goto bad;
-		}
+		}*/
 		*dest_nodeID = seg_arg->nodeID;
 		//printf("Receive Seg From Node %d:\n",*dest_nodeID);
 		memcpy(segPtr,&seg_arg->seg,sizeof(seg_t));

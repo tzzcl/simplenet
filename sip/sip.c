@@ -158,7 +158,7 @@ void* pkthandler(void* arg) {
 				printf("it's to me, forward it to stcp\n");
 				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,(seg_t*)pkt->data);
 			} else {
-				printf("it's not to me, push it back\n");
+				printf("it's not to me, push it down\n");
 				pthread_mutex_lock(routingtable_mutex);
 				son_sendpkt(routingtable_getnextnode(routingtable,hdr->dest_nodeID),pkt,son_conn);
 				pthread_mutex_unlock(routingtable_mutex);
@@ -216,7 +216,7 @@ void waitSTCP() {
 			if (getsegToSend(stcp_conn,&sip_pkt->header.dest_nodeID,segPtr)!=0) break;
 			sip_pkt->header.type=SIP;
 			sip_pkt->header.length=HEADER_LENGTH+segPtr->header.length;
-			printf("%s: get seg to send",__FUNCTION__);
+			printf("%s: get seg to send\n",__FUNCTION__);
 			int nextNodeID=routingtable_getnextnode(routingtable,sip_pkt->header.dest_nodeID);
 			son_sendpkt(nextNodeID,sip_pkt,son_conn);
 		}
