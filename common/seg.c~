@@ -16,7 +16,7 @@ int sip_sendseg(int sip_conn, int dest_nodeID, seg_t* segPtr)
 	if (send(sip_conn,seg_arg,sizeof(sendseg_arg_t),0)<=0) goto bad;
 	if (send(sip_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
-	print_seg(segPtr);
+	print_seg(&seg_arg->seg);
 	free(seg_arg);
 	return 1;
 bad:
@@ -75,7 +75,7 @@ int sip_recvseg(int sip_conn, int* src_nodeID, seg_t* segPtr)
 		  }
 	}
 	if (state==4){
-		if (head-(char*)seg_arg!=sizeof(sendseg_arg_t)){
+		if (head-(char*)seg_arg>=sizeof(sendseg_arg_t)){
 			printf("%s: bad recv length %d\n",head-(char*)seg_arg);
 			goto bad;
 		}
@@ -137,7 +137,7 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 		  }
 	}
 	if (state==4){
-		if (head-(char*)seg_arg!=sizeof(sendseg_arg_t)){
+		if (head-(char*)seg_arg>sizeof(sendseg_arg_t)){
 			printf("%s: bad recv length %d\n",__FUNCTION__,head-(char*)seg_arg);
 			goto bad;
 		}
