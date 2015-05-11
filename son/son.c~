@@ -182,6 +182,9 @@ void waitSIP() {
 //它关闭所有的连接, 释放所有动态分配的内存.
 void son_stop() {
 	//你需要编写这里的代码.
+	nt_destroy(nt);
+	close(sip_conn);
+	exit(0);
 }
 
 int main() {

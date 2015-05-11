@@ -158,7 +158,7 @@ void* pkthandler(void* arg) {
 				printf("it's to me, forward it to stcp\n");
 				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,(seg_t*)pkt->data);
 			} else {
-				printf("it's not to me, push it donw\n");
+				printf("it's not to me, push it down\n");
 				pthread_mutex_lock(routingtable_mutex);
 				son_sendpkt(routingtable_getnextnode(routingtable,hdr->dest_nodeID),pkt,son_conn);
 				pthread_mutex_unlock(routingtable_mutex);
