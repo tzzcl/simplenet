@@ -16,6 +16,7 @@ int sip_sendseg(int sip_conn, int dest_nodeID, seg_t* segPtr)
 	if (send(sip_conn,seg_arg,sizeof(sendseg_arg_t),0)<=0) goto bad;
 	if (send(sip_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
+	print_seg(segPtr);
 	free(seg_arg);
 	return 1;
 bad:
@@ -144,7 +145,7 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 		*dest_nodeID = seg_arg->nodeID;
 		//printf("Receive Seg From Node %d:\n",*dest_nodeID);
 		memcpy(segPtr,&seg_arg->seg,sizeof(seg_t));
-		//print_seg(segPtr);
+		print_seg(segPtr);
 		break;	
 	}
   }
@@ -177,6 +178,7 @@ int forwardsegToSTCP(int stcp_conn, int src_nodeID, seg_t* segPtr)
 	if (send(stcp_conn,seg_arg,sizeof(sendseg_arg_t),0)<=0) goto bad;
 	if (send(stcp_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
+	print_seg(segPtr);
 	free(seg_arg);
 	return 1;
 bad:
