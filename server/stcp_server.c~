@@ -119,7 +119,7 @@ int stcp_server_recv(int sockfd, void* buf, unsigned int length)
 		recv_length+=recv_cp;
 		buf+=recv_cp;
 		server_table[sockfd]->usedBufLen-=recv_cp;
-		memmove(server_table[sockfd]->recvBuf,server_table[sockfd]->recvBuf+recv_cp,server_table[sockfd]->usedBufLen);
+		//memmove(server_table[sockfd]->recvBuf,server_table[sockfd]->recvBuf+recv_cp,server_table[sockfd]->usedBufLen);
 		pthread_mutex_unlock(server_table[sockfd]->bufMutex);
 		sleep(RECVBUF_POLLING_INTERVAL);
 	}
