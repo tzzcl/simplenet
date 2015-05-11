@@ -1,6 +1,11 @@
 // 文件名 pkt.c
 // 创建日期: 2015年
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <memory.h>
+#include <string.h>
 #include "pkt.h"
 
 // son_sendpkt()由SIP进程调用, 其作用是要求SON进程将报文发送到重叠网络中. SON进程和SIP进程通过一个本地TCP连接互连.

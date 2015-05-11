@@ -142,7 +142,7 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 			goto bad;
 		}*/
 		*dest_nodeID = seg_arg->nodeID;
-		//printf("Receive Seg From Node %d:\n",*dest_nodeID);
+		printf("Seg sending to %d:\n",*dest_nodeID);
 		memcpy(segPtr,&seg_arg->seg,sizeof(seg_t));
 		print_seg(segPtr);
 		break;	
@@ -259,12 +259,15 @@ void print_seg(seg_t* seg){/*
 	printf("rcv_win is %d\n",header->rcv_win);
 	printf("checksum is %d\n",header->checksum);*/
 	stcp_hdr_t * header=&(seg->header);
-	printf("-----------------------------------------------------\n"
-               "|  SRC: %3d  |  DST: %3d  | SEQ:" "%6d | ACK:" "%6d |\n"
-               "|       LENGTH:""%5d      |        TYPE:%3d         |\n"
-               "|                  CHECKSUM: 0x%04x                 |\n"
-               "-----------------------------------------------------\n"
-               ,header->src_port,header->dest_port,header->seq_num,header->ack_num\
-               ,header->length,header->type\
-               ,header->checksum);
+	printf(	"-----------------------------------------------------\n"
+		"|  SRC: %3d  |  PORT:%3d  |  DST: %3d  |  PORT:%3d  |\n"
+		"|        SEQ:" "%6d       |       ACK:" "%6d        |\n"
+		"|       LENGTH:""%5d      |        TYPE:%3d         |\n"
+		"|                  CHECKSUM: 0x%04x                 |\n"
+		"-----------------------------------------------------\n"
+		,header->src_nodeID,header->src_port\
+		,headar->dest_nodeID,header->dest_port\
+		,header->seq_num,header->ack_num\
+		,header->length,header->type\
+		,header->checksum);
 }

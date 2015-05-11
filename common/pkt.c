@@ -252,8 +252,8 @@ int recvpkt(sip_pkt_t* pkt, int conn)
 void print_pktseg(sip_pkt_t* seg){
 	sip_hdr_t * header=&(seg->header);
 	printf("-----------------------------------------------------\n"
-               "|  src_nodeID: %3d  |  dest_nodeID: %3d  \n"
-               "|       LENGTH:""%5d      |        TYPE:%3d         |\n"
+               "|    src_nodeID: ""%5d    |    dest_nodeID: ""%5d   |\n"
+               "|       LENGTH:""%5d      |         TYPE:%3d        |\n"
                "-----------------------------------------------------\n"
                ,header->src_nodeID,header->dest_nodeID,header->length,header->type);
 }
