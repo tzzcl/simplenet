@@ -149,18 +149,22 @@ void* pkthandler(void* arg) {
 	//你需要编写这里的代码.
 	sip_pkt_t* pkt = malloc(sizeof(sip_pkt_t));
 	sip_hdr_t* hdr = &pkt->header;
+	int m=topology_getMyNodeID();
 	while (1) {
 		son_recvpkt(pkt,son_conn);
 		if (hdr->type==SIP) {
 			printf("%s: receive SIP pkt\n",__FUNCTION__);
-			if (hdr->dest_nodeID==topology_getMyNodeID()) {
+			if (hdr->dest_nodeID==m) {
+				printf("ii's to me, forward it to stcp\n");
 				forwardsegToSTCP(stcp_conn,hdr->src_nodeID,&((sendseg_arg_t*)pkt->data)->seg);
 			} else {
+				pritnf("it's not to me, push it back\n");
 				pthread_mutex_lock(routingtable_mutex);
 				son_sendpkt(routingtable_getnextnode(routingtable,hdr->dest_nodeID),pkt,son_conn);
 				pthread_mutex_unlock(routingtable_mutex);
 			}
 		} else { //hdr->type==ROUTE_UPDATE
+			printf("%s: receive ROUTE_UPDATE pkt\n",__FUNCTION__);
 			update_route((pkt_routeupdate_t*)pkt->data,hdr->src_nodeID);
 		}
 	}
@@ -213,7 +217,7 @@ void waitSTCP() {
 			sip_pkt->header.type=SIP;
 			sip_pkt->header.length=PKT_HEADER_LENGTH+segPtr->header.length;
 			printf("%s: get seg to send",__FUNCTION__);
-			int nextNodeID=routingtable_getnextnode(routingtable,dest_nodeID);
+			int nextNodeID=routingtable_getnextnode(routingtable,sip_pkt->header.dest_nodeID);
 			son_sendpkt(nextNodeID,sip_pkt,son_conn);
 		}
 		close(stcp_conn);
