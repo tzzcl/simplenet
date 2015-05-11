@@ -88,7 +88,7 @@ int stcp_server_sock(unsigned int server_port)
 // (当收到SYN时, seghandler会进行状态的转换). 该函数在一个无穷循环中等待TCB的state转换为CONNECTED,  
 // 当发生了转换时, 该函数返回1. 你可以使用不同的方法来实现这种阻塞等待.
 int stcp_server_accept(int sockfd) 
-{
+{/*
 	pthread_mutex_lock(&listens_mutex);
 	if (listens==-1){
 		int ret=accept(conn_stcp,(struct sockaddr *)&cliaddr,&clilen);
@@ -96,7 +96,7 @@ int stcp_server_accept(int sockfd)
 		conn_stcp=ret;
 		listens=0;
 	}
-	pthread_mutex_unlock(&listens_mutex);
+	pthread_mutex_unlock(&listens_mutex);*/
 	server_table[sockfd]->state=LISTENING;
 	while (server_table[sockfd]->state!=CONNECTED) ;
 	return 1;

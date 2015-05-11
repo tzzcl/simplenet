@@ -92,7 +92,7 @@ int stcp_server_accept(int sockfd)
 	pthread_mutex_lock(&listens_mutex);
 	if (listens==-1){
 		int ret=accept(conn_stcp,(struct sockaddr *)&cliaddr,&clilen);
-		fprintf("%s: accept sock to %d > conn_stcp\n",__FUNCTION__,ret);
+		fprintf(stderr,"%s: accept sock to %d > conn_stcp\n",__FUNCTION__,ret);
 		conn_stcp=ret;
 		listens=0;
 	}
