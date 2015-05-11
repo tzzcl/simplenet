@@ -123,9 +123,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 	for (int i=0;i<pkt_ru->entryNum;i++) {
 		int dest_nodeID = pkt_ru->entry[i].nodeID;
 		unsigned int cost = pkt_ru->entry[i].cost;
-		if (dvtable_getcost(dv,src_nodeID,dest_nodeID)>cost) {
-			dvtable_setcost(dv,src_nodeID,dest_nodeID,cost);
-		}
+		dvtable_setcost(dv,src_nodeID,dest_nodeID,cost);
 	}
 	int *a=topology_getNbrArray(),*A=topology_getNodeArray();
 	pthread_mutex_lock(routingtable_mutex);
@@ -134,8 +132,8 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 		for (int j=0;j<N;j++) {
 			int toID=A[j];
 			int cost=nbrcosttable_getcost(nct,fromID)+dvtable_getcost(dv,fromID,toID);
-			if (cost<dvtable_getcost(dv,m,toID)) {
-				dvtable_setcost(dv,m,toID,cost);
+			int oldID=routingtable_getnextnode(routingtable,toID);
+			if (cost<nbrcosttable_getcost(nct,oldID)+dvtable_getcost(dv,oldID,toID) {
 				routingtable_setnextnode(routingtable,toID,fromID);
 			}
 		}
@@ -174,6 +172,8 @@ void* pkthandler(void* arg) {
 //它关闭所有连接, 释放所有动态分配的内存.
 void sip_stop() {
 	//你需要编写这里的代码.
+	close(stcp_conn);
+	close(sip_conn);
 	nbrcosttable_destroy(nct);
 	dvtable_destroy(dv);
 	routingtable_destroy(routingtable);
