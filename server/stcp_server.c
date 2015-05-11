@@ -27,7 +27,7 @@ server_tcb_t* server_table[MAX_TRANSPORT_CONNECTIONS];
 int time_out[MAX_TRANSPORT_CONNECTIONS];
 pthread_t seghandle;
 pthread_t out_handler[MAX_TRANSPORT_CONNECTIONS];
-int conn_stcp=0;
+volatile int conn_stcp=0;
 int listens;
 socklen_t clilen;
 struct sockaddr_in cliaddr;
