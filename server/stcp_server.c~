@@ -192,7 +192,6 @@ void* seghandler(void* arg)
 	int now_time=clock()/CLOCKS_PER_SEC;
 //	int state=sip_recvseg(conn_stcp,recv_seg);
         int src;
-	fprintf(stderr,"%s: conn_stcp=%d\nnow entering sip_recvseg\n",__FUNCTION__,conn_stcp);
         int state=sip_recvseg(conn_stcp,&src,recv_seg);
 	if (state==0) correct++;else if (state==1) wrong++;
 	//printf("* %d %d\n",correct,wrong);
