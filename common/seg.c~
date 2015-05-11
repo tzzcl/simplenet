@@ -13,7 +13,7 @@ int sip_sendseg(int sip_conn, int dest_nodeID, seg_t* segPtr)
 	header->checksum=0;
 	header->checksum=checksum(segPtr);
 	if (send(sip_conn,segPtr,HEADER_LENGTH+header->length,0)<=0) goto bad;
-	if (send(stcp_conn,"!#",2,0)<=0) goto bad;
+	if (send(sip_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
 	print_seg(segPtr);
 	header->checksum=0;
@@ -120,11 +120,12 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 {
   int state=0;
   char* head=0;
-  sendseg_arg_t *seg_arg=malloc(sizeof(sendseg_arg_t));
+  sendseg_arg_t segarg__;
+  sendseg_arg_t *seg_arg=&segarg__;
   while (1){
 	char now;
 	int recv_state=recv_onebyte(stcp_conn,&now);
-	if (recv_state<0) {free(seg_arg);return -1;}
+	if (recv_state<0) {return -1;}
 	switch (state){
 		case 0:{
 			if (now=='!') state=1;
@@ -169,10 +170,8 @@ int getsegToSend(int stcp_conn, int* dest_nodeID, seg_t* segPtr)
 	puts("Checksum Error!");
 	goto bad;
   }*/
-  free(seg_arg);
   return 0;
 bad:
-  free(seg_arg);
   return 1;
 }
 
