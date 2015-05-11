@@ -75,7 +75,7 @@ int sip_recvseg(int sip_conn, int* src_nodeID, seg_t* segPtr)
 		  }
 	}
 	if (state==4){
-		if (head-(char*)seg_arg>=sizeof(sendseg_arg_t)){
+		if (head-(char*)seg_arg>sizeof(sendseg_arg_t)){
 			printf("%s: bad recv length %d\n",head-(char*)seg_arg);
 			goto bad;
 		}
