@@ -259,7 +259,7 @@ unsigned short checksum(seg_t* segment) {
 	while ((cksum>>16)){
     cksum = (cksum >> 16) + (cksum & 0xffff);
 	}
-    segment->header.checksum = (unsigned short)(~cksum);
+    //segment->header.checksum = (unsigned short)(~cksum);
     return (unsigned short)(~cksum);
 }
 
