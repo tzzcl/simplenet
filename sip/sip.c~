@@ -137,7 +137,6 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 			printf("%s: from %d, pass %d, to %d\n",__FUNCTION__,m,a[i],A[j]);
 			printf("cost1: %d,cost 2:%d\n");
 			if (cost<dvtable_getcost(dv,m,toID)) {
-				printf(
 				dvtable_setcost(dv,m,toID,cost);
 				routingtable_setnextnode(routingtable,toID,routingtable_getnextnode(routingtable,fromID));
 			}
