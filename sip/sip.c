@@ -200,17 +200,20 @@ void waitSTCP() {
 	bind(listenfd,(struct sockaddr*)&saddr,sizeof(saddr));
 	printf("%s: listening on listenfd:%d\n",__FUNCTION__,listenfd);
 	listen(listenfd,1);
+	int m=topology_getMyNodeID();
 	while (1) {
 		stcp_conn = accept(listenfd,(struct sockaddr*)&caddr,&clen);
 		printf("%s: accept stcp connect, stcp_conn:%d\n",__FUNCTION__,stcp_conn);
-		int dest_nodeID;
 		sip_pkt_t *sip_pkt=malloc(sizeof(sip_pkt_t));
 		seg_t *segPtr=(seg_t*)&sip_pkt->data;
 		while (1) {
 			memset(sip_pkt,0,sizeof(sip_pkt_t));
-			if (getsegToSend(stcp_conn,&dest_nodeID,segPtr)!=0) break;
-			printf("%s: get seg to send, dest: %d\n",__FUNCTION__,dest_nodeID);
-			int nextNodeID=routingtable_getnextnode(routingtable,dest_nodeID);
+			sip_pkt->header.src_nodeID=m;
+			if (getsegToSend(stcp_conn,&sip_pkt->header.dest_nodeID,segPtr)!=0) break;
+			sip_pkt->header.type=SIP;
+			sip_pkt->header.length=PKT_HEADER_LENGTH+segPtr->header.length;
+			printf("%s: get seg to send",__FUNCTION__);
+			int nextNodeID=routingtable_getnextnode(routingtable,sip_pkt->header.dest_nodeID);
 			son_sendpkt(nextNodeID,sip_pkt,son_conn);
 		}
 		close(stcp_conn);
