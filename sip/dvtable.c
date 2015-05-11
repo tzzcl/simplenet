@@ -125,6 +125,17 @@ void dvtable_print(dv_t* dvtable)
 	}
 	dvtable++;
   }
+  dvtable-=n+1;
+  printf("\n-------------------------");
+  for (int i=0;i<=n;i++) {
+	printf("\n%d",dvtable->nodeID);
+	dv_entry_t *dve=dvtable->dvEntry;
+	for (int j=0;j<N;j++) {
+		printf("\t%d",dvtable_getcost(dvtable-i,dvtable->nodeID,dve->nodeID);
+		dve++;
+	}
+	dvtable++;
+  }
   printf("\n");
   return;
 }

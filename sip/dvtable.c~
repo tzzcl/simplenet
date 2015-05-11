@@ -42,7 +42,7 @@ dv_t* dvtable_create()
   for (int j=0;j<N;j++) {
 	dve->nodeID = A[j];
 	//if (m==A[j]) dve->cost = 0;
-	else dve->cost = topology_getCost(m,A[j]);
+	dve->cost = topology_getCost(m,A[j]);
 	dve++;
   }
   free(a);
@@ -121,6 +121,17 @@ void dvtable_print(dv_t* dvtable)
 	dv_entry_t *dve=dvtable->dvEntry;
 	for (int j=0;j<N;j++) {
 		printf("\t%d",dve->cost);
+		dve++;
+	}
+	dvtable++;
+  }
+  dvtable-=n+1;
+  printf("\n-------------------------");
+  for (int i=0;i<=n;i++) {
+	printf("\n%d",dvtable->nodeID);
+	dv_entry_t *dve=dvtable->dvEntry;
+	for (int j=0;j<N;j++) {
+		printf("\t%d",dvtable_getcost(dvtable,dvtable->nodeID,dve->nodeID);
 		dve++;
 	}
 	dvtable++;
