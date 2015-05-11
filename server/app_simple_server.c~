@@ -42,8 +42,11 @@ int connectToSIP() {
 	struct sockaddr_in saddr;
 	memset(&saddr,0,sizeof(saddr));
 	saddr.sin_family = AF_INET;
-	saddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	saddr.sin_port = htons(SIP_PORT);
+	if (inet_pton(AF_INET,"127.0.0.1",&saddr.sin_addr)<=0) {
+		perror("inet_pton error for 127.0.0.1");
+		return -1;
+	}
 	if (connect(sip_conn,(struct sockaddr *)&saddr,sizeof(saddr))<0) {
 		perror("connect error");return -1;
 	}
