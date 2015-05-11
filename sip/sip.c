@@ -120,12 +120,15 @@ void* routeupdate_daemon(void* arg) {
 void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 	pthread_mutex_lock(dv_mutex);
 	int n=topology_getNbrNum(),N=topology_getNodeNum(),m=topology_getMyNodeID();
+	int *a=topology_getNbrArray(),*A=topology_getNodeArray();
 	for (int i=0;i<pkt_ru->entryNum;i++) {
 		int dest_nodeID = pkt_ru->entry[i].nodeID;
 		unsigned int cost = pkt_ru->entry[i].cost;
 		dvtable_setcost(dv,src_nodeID,dest_nodeID,cost);
+		if (routingtable_getnextnode(routingtable,dest_nodeID)==src_nodeID) {
+			dvtable_setcost(dv,m,dest_nodeID,cost+dvtable_getcost(dv,m,src_nodeID));
+		}
 	}
-	int *a=topology_getNbrArray(),*A=topology_getNodeArray();
 	pthread_mutex_lock(routingtable_mutex);
 	for (int i=0;i<n;i++) {
 		int fromID=a[i];

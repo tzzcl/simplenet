@@ -121,7 +121,7 @@ int getpktToSend(sip_pkt_t* pkt, int* nextNode,int sip_conn)
 {
 	int state=0;
 	sendpkt_arg_t temp__;
-	sendpkt_arg_t *temp=temp__;
+	sendpkt_arg_t *temp=&temp__;
 	memset(temp,0,sizeof(sendpkt_arg_t));
 	char* head=0;
 	while (1){
@@ -289,4 +289,19 @@ void print_pktseg(sip_pkt_t* seg){
                "|       LENGTH:""%5d      |         TYPE:%3d        |\n"
                "-----------------------------------------------------\n"
                ,header->src_nodeID,header->dest_nodeID,header->length,header->type);
+}
+
+sip_pkt_t* build_failpkt(int nodeID) {
+	sip_pkt_t *pkt=malloc(sizeof(sip_pkt_t));
+	sip_hdr_t *hdr=&pkt->header;
+	hdr->src_nodeID=nodeID;
+	hdr->dest_nodeID=BROADCAST_NODEID;
+	hdr->type=ROUTE_UPDATE;
+	hdr->length=12;
+	pkt_routeupdate_t *pkt_ru=(pkt_routeupdate_t*)&pkt->data;
+	pkt_ru->entryNum=1;
+	routeupdate_entry_t *ru=&pkt_ru->entry[0];
+	ru->nodeID=nodeID;
+	ru->cost=INFINITE_COST;
+	return pkt_ru;
 }

@@ -7,7 +7,7 @@
 #define	ROUTE_UPDATE 1
 #define SIP 2	
 
-#define PKTHEADER_LENGTH 12
+#define PKT_HEADER_LENGTH 12
 
 //SIP报文格式定义
 typedef struct sipheader {
@@ -101,4 +101,5 @@ int sendpkt(sip_pkt_t* pkt, int conn);
 int recvpkt(sip_pkt_t* pkt, int conn);
 void print_pktseg(sip_pkt_t* seg);
 int recv_pktbyte(int connection,char* ch);
+pkt_routeupdate_t* build_failpkt(int nodeID);
 #endif

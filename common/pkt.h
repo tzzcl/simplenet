@@ -101,4 +101,5 @@ int sendpkt(sip_pkt_t* pkt, int conn);
 int recvpkt(sip_pkt_t* pkt, int conn);
 void print_pktseg(sip_pkt_t* seg);
 int recv_pktbyte(int connection,char* ch);
+sip_pkt_t* build_failpkt(int nodeID);
 #endif

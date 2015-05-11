@@ -123,7 +123,9 @@ void* listen_to_neighbor(void* arg) {
 	while (1){
 		if (recvpkt(data,nt[now].conn)<0) 
 		{
-			close(nt[now].conn);break;
+			close(nt[now].conn);
+			forwardpktToSIP(build_failpkt(nt[now].nodeID),sip_conn);
+			break;
 		}
 		forwardpktToSIP(data,sip_conn);
 	}
@@ -160,17 +162,29 @@ void waitSIP() {
 		if (getpktToSend(recv_seg,&nextNode,sip_conn)!=1)
 			continue;
 		if (nextNode==BROADCAST_NODEID){
+			char *flags=malloc(nbrNum);
+			memset(flags,0,nbrNum);
 			for (int i=0;i<nbrNum;i++)
 			{
-				sendpkt(recv_seg,nt[i].conn);
+				if (sendpkt(recv_seg,nt[i].conn)==-1) {
+					flags[i]=1;
+				}
 			}
+			for (int i=0;i<nbrNum;i++) {
+				if (flags[i]==1) {
+					forwardpktToSIP(build_failpkt(nt[i].nodeID),sip_conn);
+				}
+			}
+			free(flags);
 		}
 		else{
 			for (int i=0;i<nbrNum;i++)
 			{
 				if (nt[i].nodeID==nextNode)
 				{
-					sendpkt(recv_seg,nt[i].conn);
+					if (sendpkt(recv_seg,nt[i].conn)==-1) {
+						forwardpktToSIP(build_failpkt(nt[i].nodeID),sip_conn);
+					}
 					break;
 				}
 			}
