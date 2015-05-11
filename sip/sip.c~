@@ -185,17 +185,21 @@ void sip_stop() {
 void waitSTCP() {
 	//你需要编写这里的代码.
 	int listenfd = socket(AF_INET,SOCK_STREAM,0);
+	if (listenfd<0) {
+		perror("socket error");
+	}
 	struct sockaddr_in saddr,caddr;
 	memset(&saddr,0,sizeof(saddr));
 	memset(&caddr,0,sizeof(caddr));
 	saddr.sin_family = AF_INET;
 	saddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	saddr.sin_port = htons(SIP_PORT);
+	const int on = 1;
+	setsockopt(listenfd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on));
 	bind(listenfd,(struct sockaddr*)&saddr,sizeof(saddr));
+	printf("%s: listening on listenfd:%d\n",__FUNCTION__,listenfd);
 	listen(listenfd,1);
-	int clen=sizeof(caddr);
 	while (1) {
-		printf("%s: listening on listenfd:%d\n",__FUNCTION__,listenfd);
 		stcp_conn = accept(listenfd,(struct sockaddr*)&caddr,&clen);
 		printf("%s: accept stcp connect, stcp_conn:%d\n",__FUNCTION__,stcp_conn);
 		int dest_nodeID;
