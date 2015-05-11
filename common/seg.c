@@ -34,7 +34,7 @@ int recv_onebyte(int connection,char* ch){
 	char buf[2];memset(buf,0,sizeof(buf));
 	int n=recv(connection,buf,1,0);
 	if (n<=0) {
-		printf("conn_stcp = %d, ");
+		fprintf(stderr,"%s:connection=%d, ",__FUNCTION__,connection);
 		perror("Receive Error!");
 		return -1;
 	}
@@ -47,7 +47,7 @@ int sip_recvseg(int sip_conn, int* src_nodeID, seg_t* segPtr)
   int state=0;
   char* head=0;
   sendseg_arg_t *seg_arg=malloc(sizeof(sendseg_arg_t));
-  printf("sip_conn < conn_stcp %d\n",sip_conn);
+  fprintf(stderr,"sip_conn < conn_stcp %d\n",sip_conn);
   while (1){
 	char now;
 	int recv_state=recv_onebyte(sip_conn,&now);
