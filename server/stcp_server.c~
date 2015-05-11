@@ -220,6 +220,7 @@ void* seghandler(void* arg)
 							puts("A");
 						if (recv_seg->header.type==SYN){
 							printf("%d sock receive SYN,turned into connected\n",i);
+							server_table[i]->client_nodeID=src;
 							server_table[i]->client_portNum=recv_seg->header.src_port;
 							init_seg(send_seg,server_table[i],SYNACK);
 //							sip_sendseg(conn_stcp,send_seg);
