@@ -52,6 +52,7 @@ int connectToSIP() {
 	}
 	return sip_conn;
 }
+}
 
 //这个函数断开到本地SIP进程的TCP连接. 
 void disconnectToSIP(int sip_conn) {
