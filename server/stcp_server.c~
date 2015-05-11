@@ -48,6 +48,7 @@ void stcp_server_init(int conn)
 	memset(time_out,0,sizeof(time_out));
 	conn_stcp=conn;
 	listens=-1;
+	printf("%s: conn_stcp <- sip_conn %d\n:",conn_stcp);
 	pthread_create(&seghandle,NULL,seghandler,NULL);
   return;
 }
