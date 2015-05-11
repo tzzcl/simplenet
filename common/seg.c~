@@ -19,6 +19,7 @@ int sip_sendseg(int sip_conn, int dest_nodeID, seg_t* segPtr)
 	header->checksum=0;
 	return 1;
 bad:
+	header->checksum=0;
         printf("%s: failed\n",__FUNCTION__);
 	return -1;
 	/*seg_arg->nodeID = dest_nodeID;

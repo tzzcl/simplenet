@@ -13,7 +13,7 @@ int sip_sendseg(int sip_conn, int dest_nodeID, seg_t* segPtr)
 	header->checksum=0;
 	header->checksum=checksum(segPtr);
 	if (send(sip_conn,segPtr,HEADER_LENGTH+header->length,0)<=0) goto bad;
-	if (send(stcp_conn,"!#",2,0)<=0) goto bad;
+	if (send(sip_conn,"!#",2,0)<=0) goto bad;
         printf("%s: succeeded\n",__FUNCTION__);
 	print_seg(segPtr);
 	header->checksum=0;
