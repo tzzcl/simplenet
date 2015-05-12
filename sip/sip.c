@@ -192,8 +192,9 @@ void* pkthandler(void* arg) {
 void sip_stop() {
 	//你需要编写这里的代码.
 	son_sendpkt(BROADCAST_NODEID,build_failpkt(topology_getMyNodeID()),son_conn);
-	if (stcp_conn!=-1) close(stcp_conn);
-	stcp_conn=-1
+//	if (stcp_conn!=-1) close(stcp_conn);
+//	stcp_conn=-1
+	close(stcp_conn);
 	close(son_conn);
 	nbrcosttable_destroy(nct);
 	dvtable_destroy(dv);

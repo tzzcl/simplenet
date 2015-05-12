@@ -118,7 +118,7 @@ void* routeupdate_daemon(void* arg) {
 //如果报文是SIP报文,并且目的节点就是本节点,就转发报文给STCP进程. 如果目的节点不是本节点,
 //就根据路由表转发报文给下一跳.如果报文是路由更新报文,就更新距离矢量表和路由表.
 void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
-	pthread_mutex_lock(dv_mutex);
+	//pthread_mutex_lock(dv_mutex);
 	int n=topology_getNbrNum(),N=topology_getNodeNum(),m=topology_getMyNodeID();
 	if (src_nodeID==BROADCAST_NODEID&&pkt_ru->entryNum==1) {
 		pthread_mutex_lock(dv_mutex);
@@ -127,6 +127,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 		dvtable_delete(dv,pkt_ru->entry[0].nodeID);
 		pthread_mutex_unlock(routingtable_mutex);
 		pthread_mutex_unlock(dv_mutex);
+		return;
 	}
 	int *a=topology_getNbrArray(),*A=topology_getNodeArray();
 	for (int i=0;i<pkt_ru->entryNum;i++) {
