@@ -139,3 +139,25 @@ void dvtable_print(dv_t* dvtable)
   printf("\n");
   return;
 }
+
+void dvtable_delete(dv_t* dvtable,int nodeID) {
+  int n = topology_getNbrNum(),N = topology_getNodeNum();
+  for (int i=0;i<=n;i++) {
+	if (dvtable->nodeID==nodeID) {
+		dv_entry_t *dve = dvtable->dvEntry;
+		for (int j=0;j<N;j++) {
+			dve->cost = INFINITE_COST;
+			dve++;
+		}
+		continue;
+	}
+	for (int j=0;j<N;j++) {
+		dv_entry_t *dve = dvtable->dvEntry;
+		if (dve->nodeID==nodeID) {
+			dve->cost = INFINITE_COST;
+		}
+		dve++;		
+	}
+	dvtable++;
+  }
+}

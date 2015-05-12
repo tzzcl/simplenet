@@ -81,8 +81,8 @@ int dvtable_setcost(dv_t* dvtable,int fromNodeID,int toNodeID, unsigned int cost
 			}
 			dve++;
 		}
-	dvtable++;
 	}
+	dvtable++;
   }
   return -1;
 }
@@ -138,4 +138,20 @@ void dvtable_print(dv_t* dvtable)
   }*/
   printf("\n");
   return;
+}
+
+void dvtable_delete(dv_t* dvtable,int nodeID) {
+  int n = topology_getNbrNum(),N = topology_getNodeNum();
+  for (int i=0;i<=n;i++) {
+	if (dvtable->nodeID==fromNodeID) {
+		dv_entry_t *dve = dvtable->dvEntry;
+		for (int j=0;j<N;j++) {
+			dve->cost = INFINITE_COST;
+			dve++;
+		}
+		continue;
+	}
+	
+	dvtable++;
+  }
 }

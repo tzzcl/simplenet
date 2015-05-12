@@ -153,6 +153,7 @@ void waitSIP() {
 	bind(listenfd,(struct sockaddr *)&servaddr, sizeof(servaddr));
 	puts("SON Wait For SIP Server Init Success!");	
 	listen(listenfd,1);
+	while(1){
 	sip_conn=accept(listenfd,(struct sockaddr *)&cliaddr,&clilen);
 	puts("Accept SIP Process!");
 	int nextNode=0;
@@ -167,15 +168,15 @@ void waitSIP() {
 			for (int i=0;i<nbrNum;i++)
 			{
 				if (sendpkt(recv_seg,nt[i].conn)==-1) {
-					flags[i]=1;
+					//flags[i]=1;
 				}
-			}
+			}/*
 			for (int i=0;i<nbrNum;i++) {
 				if (flags[i]==1) {
 					forwardpktToSIP(build_failpkt(nt[i].nodeID),sip_conn);
 				}
 			}
-			free(flags);
+			free(flags);*/
 		}
 		else{
 			for (int i=0;i<nbrNum;i++)
@@ -183,11 +184,14 @@ void waitSIP() {
 				if (nt[i].nodeID==nextNode)
 				{
 					if (sendpkt(recv_seg,nt[i].conn)==-1) {
-						forwardpktToSIP(build_failpkt(nt[i].nodeID),sip_conn);
+						//forwardpktToSIP(build_failpkt(nt[i].nodeID),sip_conn);
+					}
 					break;
 				}
 			}
 		}
+	}
+	printf("####SIP stop!! listening for next SIP\n");
 	}
 }
 

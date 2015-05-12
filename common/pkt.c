@@ -294,10 +294,10 @@ void print_pktseg(sip_pkt_t* seg){
 sip_pkt_t* build_failpkt(int nodeID) {
 	sip_pkt_t *pkt=malloc(sizeof(sip_pkt_t));
 	sip_hdr_t *hdr=&pkt->header;
-	hdr->src_nodeID=nodeID;
+	hdr->src_nodeID=BROADCAST_NODEID;
 	hdr->dest_nodeID=BROADCAST_NODEID;
 	hdr->type=ROUTE_UPDATE;
-	hdr->length=12;
+	hdr->length=4;
 	pkt_routeupdate_t *pkt_ru=(pkt_routeupdate_t*)&pkt->data;
 	pkt_ru->entryNum=1;
 	routeupdate_entry_t *ru=&pkt_ru->entry[0];

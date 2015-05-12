@@ -120,14 +120,22 @@ void* routeupdate_daemon(void* arg) {
 void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 	pthread_mutex_lock(dv_mutex);
 	int n=topology_getNbrNum(),N=topology_getNodeNum(),m=topology_getMyNodeID();
+	if (src_nodeID==BROADCAST_NODEID&&pkt_ru->entryNum==1) {
+		pthread_mutex_lock(dv_mutex);
+		pthread_mutex_lock(routingtable_mutex);
+		routingtable_delete(routingtable,pkt_ru->entry[0].nodeID);
+		dvtable_delete(dv,pkt_ru->entry[0].nodeID);
+		pthread_mutex_unlock(routingtable_mutex);
+		pthread_mutex_unlock(dv_mutex);
+	}
 	int *a=topology_getNbrArray(),*A=topology_getNodeArray();
 	for (int i=0;i<pkt_ru->entryNum;i++) {
 		int dest_nodeID = pkt_ru->entry[i].nodeID;
 		unsigned int cost = pkt_ru->entry[i].cost;
 		dvtable_setcost(dv,src_nodeID,dest_nodeID,cost);
-		if (routingtable_getnextnode(routingtable,dest_nodeID)==src_nodeID&&cost==INFINITE_COST) {
+		/*if (routingtable_getnextnode(routingtable,dest_nodeID)==src_nodeID&&cost==INFINITE_COST) {
 			dvtable_setcost(dv,m,dest_nodeID,INFINITE_COST);
-		}
+		}*/
 	}
 	pthread_mutex_lock(routingtable_mutex);
 	for (int i=0;i<n;i++) {
@@ -166,8 +174,10 @@ void* pkthandler(void* arg) {
 			} else {
 				printf("it's not to me, push it down\n");
 				pthread_mutex_lock(routingtable_mutex);
-				son_sendpkt(routingtable_getnextnode(routingtable,hdr->dest_nodeID),pkt,son_conn);
+				int next_nodeID=routingtable_getnextnode(routingtable,hdr->dest_nodeID);
 				pthread_mutex_unlock(routingtable_mutex);
+				if (next_nodeID!=UNREACHABLE)
+				son_sendpkt(next_nodeID,pkt,son_conn);
 			}
 		} else { //hdr->type==ROUTE_UPDATE
 			printf("%s: receive ROUTE_UPDATE pkt\n",__FUNCTION__);
@@ -180,6 +190,7 @@ void* pkthandler(void* arg) {
 //它关闭所有连接, 释放所有动态分配的内存.
 void sip_stop() {
 	//你需要编写这里的代码.
+	son_sendpkt(BROADCAST_NODEID,build_failpkt(topology_getMyNodeID()),son_conn);
 	close(stcp_conn);
 	close(son_conn);
 	nbrcosttable_destroy(nct);
@@ -226,6 +237,7 @@ void waitSTCP() {
 			sip_pkt->header.length=HEADER_LENGTH+segPtr->header.length;
 			printf("%s: get seg to send\n",__FUNCTION__);
 			int nextNodeID=routingtable_getnextnode(routingtable,sip_pkt->header.dest_nodeID);
+			if (nextNodeID!=UNREACHABLE)
 			son_sendpkt(nextNodeID,sip_pkt,son_conn);
 		}
 		close(stcp_conn);

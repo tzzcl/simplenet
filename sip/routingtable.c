@@ -104,3 +104,22 @@ void routingtable_print(routingtable_t* routingtable)
   }
   return;
 }
+
+void routingtable_delete(routingtable_t* routingtable,int nodeID) {
+  for (int i=0;i<MRS;i++) {
+  	routingtable_entry_t *p = routingtable->hash[i];
+	if (p->destNodeID==nodeID) {
+		p->nextNodeID = UNREACHABLE;
+	}
+	if (p->nextNodeID==nodeID) {
+		p->nextNodeID = UNREACHABLE;
+	}
+	p = p->next;
+  }
+  /*p = malloc(sizeof(routingtable_entry_t));
+  p->destNodeID = destNodeID;
+  p->nextNodeID = nextNodeID;
+  p->next = routingtable->hash[h];
+  routingtable->hash[h] = p;*/
+  return;
+}

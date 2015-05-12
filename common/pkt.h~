@@ -101,5 +101,7 @@ int sendpkt(sip_pkt_t* pkt, int conn);
 int recvpkt(sip_pkt_t* pkt, int conn);
 void print_pktseg(sip_pkt_t* seg);
 int recv_pktbyte(int connection,char* ch);
-pkt_routeupdate_t* build_failpkt(int nodeID);
+sip_pkt_t* build_failpkt(int nodeID);
+
+#define UNREACHABLE 0x7fff
 #endif
