@@ -161,7 +161,8 @@ void waitSIP() {
 	memset(recv_seg,0,sizeof(sip_pkt_t));
 	while (1){
 		if (getpktToSend(recv_seg,&nextNode,sip_conn)!=1)
-			continue;
+			//continue;
+			break;
 		if (nextNode==BROADCAST_NODEID){
 			//char *flags=malloc(nbrNum);
 			//memset(flags,0,nbrNum);
@@ -192,6 +193,7 @@ void waitSIP() {
 		}
 	}
 	printf("####SIP stop!! listening for next SIP\n");
+	close(sip_conn);
 	}
 }
 
