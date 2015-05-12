@@ -106,10 +106,9 @@ void routingtable_print(routingtable_t* routingtable)
 }
 
 void routingtable_delete(routingtable_t* routingtable,int nodeID) {
-  
-  int h = makehash(destNodeID);
-  routingtable_entry_t *p = routingtable->hash[h];
-  while (p!=NULL) {
+  for (int i=0;i<MRS;i++) {
+  	routingtable_entry_t *p = routingtable->hash[i];
+	if (p==NULL)continue;
 	if (p->destNodeID==nodeID) {
 		p->nextNodeID = UNREACHABLE;
 	}
