@@ -124,7 +124,7 @@ void update_route(pkt_routeupdate_t *pkt_ru,int src_nodeID) {
 		pthread_mutex_lock(dv_mutex);
 		pthread_mutex_lock(routingtable_mutex);
 		routingtable_delete(routingtable,pkt_ru->entry[0].nodeID);
-		dvtable_delete(dvtable,pkt_ru->entry[0].nodeID);
+		dvtable_delete(dv,pkt_ru->entry[0].nodeID);
 		pthread_mutex_unlock(routingtable_mutex);
 		pthread_mutex_unlock(dv_mutex);
 	}
@@ -191,14 +191,15 @@ void* pkthandler(void* arg) {
 void sip_stop() {
 	//你需要编写这里的代码.
 	son_sendpkt(BROADCAST_NODEID,build_failpkt(topology_getMyNodeID()),son_conn);
-	close(stcp_conn);
+	if (stcp_conn!=-1) close(stcp_conn);
+	stcp_conn=-1
 	close(son_conn);
 	nbrcosttable_destroy(nct);
 	dvtable_destroy(dv);
 	routingtable_destroy(routingtable);
 	free(dv_mutex);
 	free(routingtable_mutex);
-  return;
+	exit(0);
 }
 
 //这个函数打开端口SIP_PORT并等待来自本地STCP进程的TCP连接.
